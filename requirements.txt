@@ -1,0 +1,4 @@
+# Mainly depends on
+pywikibot
+# for image processing
+PIL
