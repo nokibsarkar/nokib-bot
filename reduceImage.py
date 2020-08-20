@@ -1,3 +1,4 @@
+from PIL import Image as im
 #--Image resize
 temp = re.compile(u"\{\{ *(?:non-free reduce|মুক্ত নয় হ্রাস করুন) *[^\}]+\}\}",re.I)
 #attribute to zervick
