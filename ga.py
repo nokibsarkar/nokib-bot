@@ -1,3 +1,4 @@
+from setup import *
 classes = re.compile("\|\s*(?P<p>(মান|শ্রে[ণন]ী|[cC]lass|[qQ]uality))\s*=[^\|\}]*")
 rea_template = re.compile("\{\{\s*ভালো নিবন্ধ পুনর্মূল্যায়ন\s*\|\s*(?:1=\s*)?(?P<topic>[^\|]+)\|\s*(?:2=\s*)?(?P<page>\S{1,2})\s*\|\s*(?:3=)?(?P<user>[^\|\}]+)[^}]*\}\}")
 entry_pref = "#\s*\{\{\s*([Gg]ANentry|প্রভানিভুক্তি)\s*\|\s*(1\s*=\s*)"
