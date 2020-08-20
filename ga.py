@@ -1,28 +1,4 @@
-import re
-import json
-import datetime as dt
-import time
-import pywikibot as pb
-import os
-from PIL import Image as im
-bn = pb.Site("bn","wikipedia")
-def en2bn(txt):
-    refs = ["০", "১","২","৩","৪","৫","৬","৭","৮","৯"]
-    txt = str(txt)
-    st=""
-    for i in txt:
-        if(i.isdigit()):
-            st+=refs[int(i)]
-        else:
-            st+=i
-    return st
-now = dt.datetime.now()
-yesterday = now - dt.timedelta(days=1)
-config = json.loads(pb.Page(bn,"user:নকীব বট/config.json").text)
-r = pb.data.api.Request
-ISO = "%Y-%m-%dT%H:%M:%SZ"
-months = "((জান|ফেব্র)ুয়ার[িী]|ম(ে|ার্চ)|এপ্রিল|জু(ন|লা[ইঈ])|[অআ]গা?[সষ]্ট|((সেপ্ট|ন[বভ]|ডিস)েম্|অক্টো)[ভব]র)"
-no ="০১২৩৪৫৬৭৮৯"
+
 classes = re.compile("\|\s*(?P<p>(মান|শ্রে[ণন]ী|[cC]lass|[qQ]uality))\s*=[^\|\}]*")
 rea_template = re.compile("\{\{\s*ভালো নিবন্ধ পুনর্মূল্যায়ন\s*\|\s*(?:1=\s*)?(?P<topic>[^\|]+)\|\s*(?:2=\s*)?(?P<page>\S{1,2})\s*\|\s*(?:3=)?(?P<user>[^\|\}]+)[^}]*\}\}")
 entry_pref = "#\s*\{\{\s*([Gg]ANentry|প্রভানিভুক্তি)\s*\|\s*(1\s*=\s*)"
