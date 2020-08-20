@@ -1,4 +1,3 @@
-
 classes = re.compile("\|\s*(?P<p>(মান|শ্রে[ণন]ী|[cC]lass|[qQ]uality))\s*=[^\|\}]*")
 rea_template = re.compile("\{\{\s*ভালো নিবন্ধ পুনর্মূল্যায়ন\s*\|\s*(?:1=\s*)?(?P<topic>[^\|]+)\|\s*(?:2=\s*)?(?P<page>\S{1,2})\s*\|\s*(?:3=)?(?P<user>[^\|\}]+)[^}]*\}\}")
 entry_pref = "#\s*\{\{\s*([Gg]ANentry|প্রভানিভুক্তি)\s*\|\s*(1\s*=\s*)"
@@ -435,14 +434,3 @@ def manageGAR():
         pg = pb.Page(bn,gan_pref + i)
         pg.text += R[i]['content']
         pg.save(nom_summary % ("]], [[".join(R[i]['summary']) ))
-
-if(config['archiveTalk']['status']):
-    archive()
-if(config["reduceImage"]['status']):
-    reduceFUR()
-if(config["goodArticle"]["status"]):
-    manageGATalk()
-    manageGAR()
-    if(config["goodArticle"]["manageNominee"]["status"]):
-        config = config["goodArticle"]["manageNominee"]
-        manageNominee()
