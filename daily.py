@@ -1,14 +1,13 @@
 from setup import config
 if(config['archiveTalk']['status']):
     import archive
-    archive()
+    archive.archive()
 if(config["reduceImage"]['status']):
     import reduceImage
-    reduceFUR()
+    reduceImage.reduceFUR()
 if(config["goodArticle"]["status"]):
     import ga
-    manageGATalk()
-    manageGAR()
+    ga.manageGATalk()
+    ga.manageGAR()
     if(config["goodArticle"]["manageNominee"]["status"]):
-        config = config["goodArticle"]["manageNominee"]
-        manageNominee()
+        ga.manageNominee()
