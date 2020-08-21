@@ -79,7 +79,6 @@ def fetch_setting(txt):
         k = k.group(1)
         k = dict(defaults + setting_fetch.findall(k) + [('string',k)])
         k['$'] = k['current-index']
-        print(type(k['$']))
         k["max-day"] = int(k["max-day"])
         k["archive-size"] = int(k["archive-size"])
         k["on-subpage"] = k["on-subpage"] is not "না" or k["archive-pattern"][0] is "/"
@@ -175,6 +174,7 @@ def index_s(m):
 #--- Util functions declared-----
 #----- Main archival function------
 def archive():
+    print("Archival Script Started")
     pages = pb.Category(bn,u'বিষয়শ্রেণী:'+config['archiveTalk']['tracker']).members()
     global Archive
     for i in pages:
@@ -215,3 +215,4 @@ def archive():
         if(Archive['backlinks']):
             summary += u' এবং %sটি পশ্চাৎসংযোগ ঠিক করা হয়েছে' % (to_bn(Archive['backlinks']))
         i.save(summary) # main page
+    print("Archival Script End")
