@@ -1,8 +1,9 @@
 from setup import *
+config = config['goodArticle']
 classes = re.compile("\|\s*(?P<p>(মান|শ্রে[ণন]ী|[cC]lass|[qQ]uality))\s*=[^\|\}]*")
 rea_template = re.compile("\{\{\s*ভালো নিবন্ধ পুনর্মূল্যায়ন\s*\|\s*(?:1=\s*)?(?P<topic>[^\|]+)\|\s*(?:2=\s*)?(?P<page>\S{1,2})\s*\|\s*(?:3=)?(?P<user>[^\|\}]+)[^}]*\}\}")
-entry_pref = "#\s*\{\{\s*(?:[Gg]ANentry|প্রভানিভুক্তি)\s*\|\s*(?:1 *= *)"
-entry_suf = "(?:\| *(?:2 *= *)?(?P<page>[^\}\|]*))?\}\}[^[]*\[\[ *(?:[uU]ser|ব্যবহারকারী) *:(?P<user>[^\]\|]+)(?P<ext>(?:(?!\s+# *\{\{|<!--).)*)"
+entry_pref = "#\s*\{\{\s*(?:[Gg]ANentry|প্রভানিভুক্তি)\s*\|\s*(?:1\s*=\s*)?"
+entry_suf = "(?:\|\s*(?:2\s*=\s*)?(?P<page>[^\}\|]*)(?:\|(?P<note>[^\}]*))?)?\}\}[^[]*\[\[\s*(?:[Uu]ser|ব্যবহারকারী)\s*:\s*(?P<user>[^\]\|]+)(?P<ext>(?:(?!\n#\s*\{\{|<!--).)*)"
 date = re.compile("(?P<date>[" + no + "]{1,2} " + months + ",? [" + no + "]{4}|" + months + " [" + no + "]{2},? [" + no + "]{4})")
 entry = re.compile(entry_pref + "(?P<name>[^\|\}]+)" + entry_suf)
 res_patt = re.compile("\{\{\s*(?P<status>([Ff]ailed|[Dd]elisted)?)[gG]A\s*[^\}]*\}\}")
@@ -16,8 +17,8 @@ Ah_fetch = re.compile("(?P<cond>(?![^}]+\|\s*action)\|\s*action(?P<index>\d+)(?:
 ah_fetch = re.compile("\|\s*action(?P<n>\d+)\s*=\s*([^\s]+)(((?!\|\s*action\d+\s*=)[\s\S])+)")
 # ---- Article History End -----#
 uname = re.compile("\[\[\s*([uU]ser|ব্যবহারকারী)\s*:\s*(?P<uname>[^\|\]]+)")
-pat = re.compile("# *\{\{ *(প্রভানিভুক্তি|[gG]ANentry)\s*\|\s*(?:1 *= *)?(?P<title>[^\|\}]+)(?:\|\s*(?:2 *= *)?(?P<page>[^\}]*))?\}\}[^\[]*\[\[\s*(?:[uU]ser|ব্যবহারকারী)\s*:\s*(?P<user>[^\|]+)(?P<ext>((?!\s+(?:# *\{\{ *(প্রভানিভুক্তি|[gG]ANentry|))|<!--).)*)")
-gan_fetch = re.compile("\| *status *=\s*(?P<status>[^\|\}]*)((?:(?!\|\s*note).)*\|\s*note\s*=\s*(?P<note>[^\|\}]*))?")
+pat = re.compile("#\s*\{\{\s*(প্রভানিভুক্তি|[gG]ANentry)\s*\|\s*(?:1\s*=\s*)?(?P<title>[^\|\}]+)(?:\|\s*(?:2\s*= *)?(?P<page>[^\}]*))?\}\}[^\[]*\[\[\s*(?:[uU]ser|ব্যবহারকারী)\s*:\s*(?P<user>[^\|]+)(?P<ext>((?!\s+(?:# *\{\{\s*(প্রভানিভুক্তি|[gG]ANentry|))|<!--).)*)")
+gan_fetch = re.compile("\|\s*status\s*=\s*(?P<status>[^\|\}]*)((?:(?!\|\s*note).)*\|\s*note\s*=\s*(?P<note>[^\|\}]*))?")
 gan_pref = "উইকিপিডিয়া:প্রস্তাবিত ভালো নিবন্ধ/"
 g = pb.Page(bn,gan_pref[:-1])
 IPcheck = re.compile("(([0-9a-fA-f]{1,4}:?){8}|([0-9]{1,3}\.?){4})")
@@ -121,6 +122,7 @@ def getCat(title):
      "cat":"",
      "page":"১"
     }
+    print(entry_pref+re.escape(title)+entry_suf)
     patt = re.compile(entry_pref+re.escape(title)+entry_suf)
     for cat in cats.values():
         print("Checking the category:",cat)
@@ -141,7 +143,7 @@ def getCat(title):
             R["removed"] = patt.sub("",t.text)
             return R
 def manageGATalk():
-    cat = pb.Category(bn,"বিষয়শ্রেণী:" + config["goodArticle"]["tracker"]).members()
+    cat = pb.Category(bn,"বিষয়শ্রেণী:" + config["tracker"]).members()
     for talk in cat:
         title = talk.title()[5:] #main article's title
         main = pb.Page(bn,title) #main article
@@ -239,7 +241,7 @@ def manageGATalk():
                 n = n.getRedirectTarget()
             u = n.toggleTalkPage()
             u.text += "\n{{subst:ভালো নিবন্ধ বিজ্ঞপ্তি|নিবন্ধ="+main.title()+"|ফলাফল = " +R["bnstatus"]+"}}\n ~~~~ "
-            config["goodArticle"]["notifyNominator"] and u.save("মনোনীত নিবন্ধ " + R["bnstatus"] + " হয়েছে")
+            config["notifyNominator"] and u.save("মনোনীত নিবন্ধ " + R["bnstatus"] + " হয়েছে")
         except:
             pass
         subst+="\n| action" + mx + "result\t= " + R["result"]
@@ -393,7 +395,7 @@ def manageNominee():
                 R["note"] = to_s(gan.group("note")).strip()
                 subst+= "\n | status\t= " +R["status"]+"\n | note\t= "+R["note"]+"\n}}"
                 talk.text = gan_template.sub(subst,talk.text)
-                if(rex and not(rev_template.search(talk.text)) and config["goodArticle"]["addRevPage"]):
+                if(rex and not(rev_template.search(talk.text)) and config["addRevPage"]):
                     talk.text+="\n{{"+revPage.title()+"}}"  
             else:
                 #{{GAN}} template was not used
@@ -403,7 +405,7 @@ def manageNominee():
                     talk.text = s[0]
                 else:
                     talk.text = "{{আলাপ পাতা}}\n"+subst + talk.text
-                if(rex and not(rev_template.search(talk.text)) and config["goodArticle"]["addRevPage"]):
+                if(rex and not(rev_template.search(talk.text)) and config["addRevPage"]):
                     talk.text+="\n{{"+revPage.title()+"}}" ##add the link of review page
             try:
                  talk.save("{{ভালো নিবন্ধের জন্য মনোনীত}}",quiet=True)
