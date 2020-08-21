@@ -1,0 +1,21 @@
+{
+    "detectUser": {
+        "backlog": {}
+    },
+    "editWar": {
+        "count": 3,
+        "last_access": "2020-08-12T12:43:18Z",
+        "backlog": {}
+    },
+    "patrolRC": {
+        "backlog": [],
+        "last_access": "2020-07-17T08:00:30Z"
+    },
+    "categoryRedirect": {
+        "languages": [
+            "bn",
+            "hi",
+            "ko"
+        ]
+    }
+}
