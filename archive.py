@@ -1,3 +1,4 @@
+from setup import *
 #### Declaring Constants of archiving ###
 Archive = {}
 defaults = [ #default setting
