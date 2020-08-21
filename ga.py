@@ -1,23 +1,23 @@
 from setup import *
 classes = re.compile("\|\s*(?P<p>(মান|শ্রে[ণন]ী|[cC]lass|[qQ]uality))\s*=[^\|\}]*")
 rea_template = re.compile("\{\{\s*ভালো নিবন্ধ পুনর্মূল্যায়ন\s*\|\s*(?:1=\s*)?(?P<topic>[^\|]+)\|\s*(?:2=\s*)?(?P<page>\S{1,2})\s*\|\s*(?:3=)?(?P<user>[^\|\}]+)[^}]*\}\}")
-entry_pref = "#\s*\{\{\s*([Gg]ANentry|প্রভানিভুক্তি)\s*\|\s*(1\s*=\s*)"
-entry_suf = "(\|\s*(2\s*=\s*)?(?P<page>[^\}\|]*))?\}\}[^[]*(?P<user>\[\[\s*([uU]ser|ব্যবহারকারী)\s*:[^\]]+\]\])(?P<ext>((?!\s*#\s*\{\{|<\!\-\-).)*)"
-date = re.compile("(?P<date>["+no+"]{1,2} "+months+",? ["+no+"]{4}|"+months+" ["+no+"]{2},? ["+no+"]{4})")
-entry = re.compile(entry_pref+"(?P<name>[^\|\}]+)"+entry_suf)
+entry_pref = "#\s*\{\{\s*(?:[Gg]ANentry|প্রভানিভুক্তি)\s*\|\s*(?:1 *= *)"
+entry_suf = "(?:\| *(?:2 *= *)?(?P<page>[^\}\|]*))?\}\}[^[]*\[\[ *(?:[uU]ser|ব্যবহারকারী) *:(?P<user>[^\]\|]+)(?P<ext>(?:(?!\s+# *\{\{|<!--).)*)"
+date = re.compile("(?P<date>[" + no + "]{1,2} " + months + ",? [" + no + "]{4}|" + months + " [" + no + "]{2},? [" + no + "]{4})")
+entry = re.compile(entry_pref + "(?P<name>[^\|\}]+)" + entry_suf)
 res_patt = re.compile("\{\{\s*(?P<status>([Ff]ailed|[Dd]elisted)?)[gG]A\s*[^\}]*\}\}")
 ga_tag = re.compile("\{\{\s*(ভালো নিবন্ধ|[gG]ood article)\s*\}\}")
-Users = re.compile("(\{\{\s*([pP]ing|উত্তর)\s*\||\[\[\s*([uU]ser|ব্যবহারকারী)\s*:)\s*(?P<uname>[^\|\}\]]+)")
+Users = re.compile("(?:\{\{\s*(?:[pP]ing|উত্তর|[rR]e(?:ply(?: to)?)?)\s*\||\[\[\s*([uU]ser|ব্যবহারকারী)\s*:)\s*([^\|\}\]]+)")
 level = re.compile("<\$নববি(\S)\$>")
 gan_template = re.compile("\{\{\s*([gG]A nominee|ভালো নিবন্ধের জন্য মনোনীত)\s*(?P<ext>\|[^\}]+)\}\}")
 #------Article history Start ----#
 Ah = re.compile("\{\{\s*([aA]rticleHistory|নিবন্ধ ইতিহাস)\s*\|(?P<ext>[^\}]+)\}\}")
-Ah_fetch = re.compile("(?P<cond>(?![^}]+\|\s*action)\|\s*action(?P<index>\d+)([^=]*)=[^|]*)(?P<pres>((?!\|\s*current)[^}])*)\|\s*currentstatus\s*=[^|]*(?P<pret>((?!\|\s*topic)[^}])*)\|\s*topic\s*=[^|]+(?P<end>(\|[^}]+)?)")
+Ah_fetch = re.compile("(?P<cond>(?![^}]+\|\s*action)\|\s*action(?P<index>\d+)(?:[^=]*)=[^\|]*)(?P<pres>(?:(?!\|\s*current)[^\}])*)\|\s*currentstatus\s*=[^\|]*(?P<pret>(?:(?!\|\s*topic)[^\}])*)\|\s*topic\s*=[^\|]+(?P<end>(?:\|[^}]+)?)")
 ah_fetch = re.compile("\|\s*action(?P<n>\d+)\s*=\s*([^\s]+)(((?!\|\s*action\d+\s*=)[\s\S])+)")
 # ---- Article History End -----#
 uname = re.compile("\[\[\s*([uU]ser|ব্যবহারকারী)\s*:\s*(?P<uname>[^\|\]]+)")
-pat = re.compile("#\s*\{\{\s*(প্রভানিভুক্তি|[gG]ANentry)\s*\|\s*(1=)?(?P<title>[^\|\}]+)(\|\s*(2=)?(?P<page>[^\}]*))?\}\}[^\[]*\[\[\s*([uU]ser|ব্যবহারকারী)\s*:\s*(?P<user>[^\|]+)(?P<ext>((?!\s+(#\s*\{\{\s*(প্রভানিভুক্তি|[gG]ANentry|))|<\!\-\-).)*)")
-gan_fetch = re.compile("\|\s*status\s*=\s*(?P<status>[^\|\}]*)(((?!\|\s*note).)*\|\s*note\s*=\s*(?P<note>[^\|\}]*))?")
+pat = re.compile("# *\{\{ *(প্রভানিভুক্তি|[gG]ANentry)\s*\|\s*(?:1 *= *)?(?P<title>[^\|\}]+)(?:\|\s*(?:2 *= *)?(?P<page>[^\}]*))?\}\}[^\[]*\[\[\s*(?:[uU]ser|ব্যবহারকারী)\s*:\s*(?P<user>[^\|]+)(?P<ext>((?!\s+(?:# *\{\{ *(প্রভানিভুক্তি|[gG]ANentry|))|<!--).)*)")
+gan_fetch = re.compile("\| *status *=\s*(?P<status>[^\|\}]*)((?:(?!\|\s*note).)*\|\s*note\s*=\s*(?P<note>[^\|\}]*))?")
 gan_pref = "উইকিপিডিয়া:প্রস্তাবিত ভালো নিবন্ধ/"
 g = pb.Page(bn,gan_pref[:-1])
 IPcheck = re.compile("(([0-9a-fA-f]{1,4}:?){8}|([0-9]{1,3}\.?){4})")
@@ -115,19 +115,21 @@ def status(txt,d=""):
     }
     return switcher.get(txt,d)
 def getCat(title):
+    print("Getting Category about:",title)
     R={
-        "date":"",
-    "cat":"",
-    "page":"১"
+    	"date":"",
+     "cat":"",
+     "page":"১"
     }
     patt = re.compile(entry_pref+re.escape(title)+entry_suf)
     for cat in cats.values():
+        print("Checking the category:",cat)
         t = pb.Page(bn,gan_pref+cat)
         k = patt.search(t.text)
         if(k):
             try:
                 R["cat"] = cat
-                R["catpage"]=t
+                R["catpage"] = t
                 R["page"] = k.group("page")#bangla
                 R["user"] = k.group("user")
                 ext = k.group("ext")
@@ -160,14 +162,13 @@ def manageGATalk():
                 if(p[1]=="GAN"):
                     first = False
                     break
-            mx = str(len(params)+1)
+            mx = str(len(params) + 1)
             #----beta end ----
             #mx = str(int(k.group("index")) + 1 )
             cond = k.group("cond")
-            subst+=cond + k.group("pres")
+            subst += cond + k.group("pres")
         subst += "\n| action"+mx+"\t= GA"
         c = getCat(title)
-        
         if(c):
             R["topic"] = c["cat"]
             R["no"] = c["page"]
@@ -182,23 +183,23 @@ def manageGATalk():
         #-----beta ---#
         if(first):
         #----beta ---
-            subst+= "N"#first assessment
+            subst += "N"#first assessment
         else:
-            subst+="R"#reassessment
+            subst += "R"#reassessment
         try:
             R["date"] = check.group("date")
-            R["oldid"]=k.group("oldid")
+            R["oldid"] = k.group("oldid")
         except:
             c = getRevDate(talk.title())
             R["oldid"] = str(c["oldid"])
-            R["date"]=c["timestamp"]
+            R["date"] = c["timestamp"]
             #try fetching
             pass
-        subst += "\n| action"+mx+"date\t= "+R["date"]
-        subst+="\n| action"+mx+"link\t= "+R["link"]#adding link to review pag
+        subst += "\n| action" + mx + "date\t= "+R["date"]
+        subst += "\n| action" + mx + "link\t= "+R["link"]#adding link to review pag
         k = check.group("status")
         item = main.data_item()
-        if(k=="delisted" or k=="Delisted"):
+        if(k == "delisted" or k=="Delisted"):
             R["result"] = "delisted"
             R["status"] = "DGA"
             #notify the user
@@ -237,14 +238,14 @@ def manageGATalk():
             while(n.isRedirectPage()):
                 n = n.getRedirectTarget()
             u = n.toggleTalkPage()
-            u.text+= "\n{{subst:ভালো নিবন্ধ বিজ্ঞপ্তি|নিবন্ধ="+main.title()+"|ফলাফল = " +R["bnstatus"]+"}}\n ~~~~ "
-            config["goodArticle"]["notifyNominator"] and u.save("মনোনীত নিবন্ধ "+R["bnstatus"]+" হয়েছে")
+            u.text += "\n{{subst:ভালো নিবন্ধ বিজ্ঞপ্তি|নিবন্ধ="+main.title()+"|ফলাফল = " +R["bnstatus"]+"}}\n ~~~~ "
+            config["goodArticle"]["notifyNominator"] and u.save("মনোনীত নিবন্ধ " + R["bnstatus"] + " হয়েছে")
         except:
             pass
-        subst+="\n| action"+mx+"result\t= "+R["result"]
-        subst+="\n| action"+mx+"oldid\t= "+R["oldid"]#adding oldid
+        subst+="\n| action" + mx + "result\t= " + R["result"]
+        subst+="\n| action" + mx + "oldid\t= " + R["oldid"]#adding oldid
         if(ah):
-            subst+= "\n| currentstatus\t= "+R["status"]
+            subst += "\n| currentstatus\t= " + R["status"]
             pret = ""
             end=""
             try:
