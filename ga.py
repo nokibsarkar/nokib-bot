@@ -281,6 +281,8 @@ def to_s(k,s=""):
         k=s
     return k
 def manageNominee():
+    global config
+    config = config["manageNominee"]
     D ={} #{"category":{"prefix":"","suffix":"","note":"","status":""}
     warns = config["manageRevPage"]["warnings"] 
     data ={
