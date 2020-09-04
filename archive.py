@@ -54,9 +54,9 @@ NS =[
     '[wW](?:ikipedia|[Pp])|উইকিপিডিয়া',
     'আলাপ|[Tt]alk',
     '[Uu]ser talk|ব্যবহারকারী আলাপ',
-    '',
+    '[tT]emplate talk|টেমপ্লেট আলোচনা',
     '[wW](?:ikipedia|[Pp]) talk|উইকিপিডিয়া আলাপ',
-    ''
+    '[cC]ategory talk|বিষয়শ্রেণী আলোচনা'
 ]
 ns_map ={
     "TALK":1,
@@ -65,7 +65,10 @@ ns_map ={
     "ব্যবহারকারী আলাপ":2,
     "WIKIPEDIA":0,
     "WP":0,
-    "উইকিপিডিয়া":0
+    "উইকিপিডিয়া":0,
+    "WIKIPEDIA TALK":4,
+    "TEMPLATE TALK":3,
+    "উইকিপিডিয়া আলোচনা": 4
 }
 c_patt = re.compile('\s*\| *current-index *= *\d*\s*|$')
 b_numers = ['০','১','২','৩','৪','৫','৬','৭','৮','৯']
