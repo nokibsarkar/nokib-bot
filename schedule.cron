@@ -1,3 +1,3 @@
 @hourly /usr/bin/jsub -N cat -quiet /data/project/nokib-bot/pwb/bin/python3 /data/project/nokib-bot/cat.py
-@daily  /usr/bin/jstart -N ga -once -quiet /data/project/nokib-bot/pwb/bin/python3 /data/project/nokib-bot/ga.py
+@daily  /usr/bin/jstart -N daily -once -quiet /data/project/nokib-bot/pwb/bin/python3 /data/project/nokib-bot/daily.py
 */5 * * * * /usr/bin/jsub -N editWar -quiet /data/project/nokib-bot/pwb/bin/python3 /data/project/nokib-bot/editWar.py
