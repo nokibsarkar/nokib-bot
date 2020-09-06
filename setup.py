@@ -3,15 +3,14 @@ import json
 import datetime as dt
 import time
 import pywikibot as pb
-import os
 bn = pb.Site("bn","wikipedia")
+numers = ["০", "১","২","৩","৪","৫","৬","৭","৮","৯"]
 def en2bn(txt):
-    refs = ["০", "১","২","৩","৪","৫","৬","৭","৮","৯"]
     txt = str(txt)
     st=""
     for i in txt:
         if(i.isdigit()):
-            st+=refs[int(i)]
+            st+=numers[int(i)]
         else:
             st+=i
     return st
