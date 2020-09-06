@@ -50,28 +50,20 @@ DATE = '%d %b %Y' #pattern of the date
 setting = re.compile('\{\{\s*স্বয়ংক্রিয় সংগ্রহশালা\s*([^\}]*)\}\}')
 setting_fetch = re.compile('\| *([^= ]+) *= *([^\n\|]+)')
 section = re.compile('(\s*\n=+ *(?P<section>[^=]+)=+\n(?:(?!\n=+[^=]+=+\n)[\s\S])*)')
-NS =[
-    '[wW](?:ikipedia|[Pp])|উইকিপিডিয়া',
-    'আলাপ|[Tt]alk',
-    '[Uu]ser talk|ব্যবহারকারী আলাপ',
-    '[tT]emplate talk|টেমপ্লেট আলোচনা',
-    '[wW](?:ikipedia|[Pp]) talk|উইকিপিডিয়া আলাপ',
-    '[cC]ategory talk|বিষয়শ্রেণী আলোচনা'
-]
-ns_map ={
-    "TALK":1,
-    "আলাপ":1,
-    "USER TALK":2,
-    "ব্যবহারকারী আলাপ":2,
-    "WIKIPEDIA":0,
-    "WP":0,
-    "উইকিপিডিয়া":0,
-    "WIKIPEDIA TALK":4,
-    "TEMPLATE TALK":3,
-    "উইকিপিডিয়া আলোচনা": 4
+ns_mapping ={
+    "4":'[wW](?:ikipedia|[Pp])|উইকিপিডিয়া',
+    "1":'আলাপ|[Tt]alk',
+    "3":'[Uu]ser talk|ব্যবহারকারী আলাপ',
+    "11":'[tT]emplate talk|টেমপ্লেট আলোচনা',
+    "5":'[wW](?:ikipedia|[Pp]) talk|উইকিপিডিয়া আলাপ',
+    "15":'[cC]ategory talk|বিষয়শ্রেণী আলোচনা',
+    "7":'চিত্র আলোচনা',
+    "9":'মিডিয়াউইকি আলোচনা',
+    "13":'সাহায্য আলোচনা',
+    "101":'প্রবেশদ্বার আলোচনা',
+    "2":'[uU]ser|ব্যবহারকারী'
 }
 c_patt = re.compile('\s*\| *current-index *= *\d*\s*|$')
-b_numers = ['০','১','২','৩','৪','৫','৬','৭','৮','৯']
 ns_patt = re.compile('(?:((?:আলাপ|ব্যবহারকারী|টেমপ্লেট|বিষয়শ্রেণী|উইকিপিডিয়া|বিশেষ|Talk|user|wikipedia|template|category|WP)(?: talk| আলাপ)?):)?(.+)',re.I)
 sep = re.compile("\s*,\s*")
 #### Constant declared #####
@@ -138,11 +130,9 @@ def archive_section(match):
         Archive["content"] += content
         return ""
     return content # skip the section
-def fetch_backlink(title):
-    ns, title = ns_patt.match(title).groups()
+def fetch_backlink(title,ns):
+    ns = ns_mapping[str(i.namespace().id)]
     backlink = "(\[\[ *(?:"
-    ns = ns_map[ns.upper()]
-    ns = NS[ns]
     title = re.escape(title)
     backlink += ns +") *: *" + title + " *#([^\|\]]+))" #add a colon
     return re.compile(backlink)
@@ -202,7 +192,7 @@ def archive():
         summary = u'বট কর্তৃক %sটি অনুচ্ছেদ স্বয়ংক্রিয়ভাবে সংগ্রহশালায় স্থানান্তর' % to_bn(len(Archive['sections']))
         pg.text += Archive['content']
         pg.save(summary) #archive page
-        backlink = fetch_backlink(i.title())
+        backlink = fetch_backlink(i.title(with_ns=False,underscore=False),i.namespace())
         backlinks = i.backlinks(follow_redirects = False)
         for j in backlinks:
             Archive['fixed-section'] = 0
