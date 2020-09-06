@@ -1,4 +1,4 @@
-from test_setup import *
+from setup import *
 #### Declaring Constants of archiving ###
 Archive = {}
 defaults = [ #default setting
@@ -150,7 +150,7 @@ def check_overflow(pg, prefix): # old archive has been overloaded
         pg.save("নতুন সংগ্রহশালার সূচনা")
 index = re.compile('(\$|[my][12])')
 def index_s(m):
-    return to_en(Archive['config'][m.group(1)])
+    return en2bn(Archive['config'][m.group(1)])
 #--- Util functions declared-----
 #----- Main archival function------
 def archive():
