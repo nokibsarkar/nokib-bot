@@ -1,4 +1,4 @@
-from setup import *
+from test_setup import *
 #### Declaring Constants of archiving ###
 Archive = {}
 defaults = [ #default setting
@@ -29,7 +29,6 @@ numers = {
     '৮':'8',
     '৯':'9'
 }
-numer_group = ''.join(numers.keys())
 months ={ # month mapping
     'জানুয়ারি':'Jan',
     'ফেব্রুয়ারি':'Feb',
@@ -45,7 +44,7 @@ months ={ # month mapping
     'ডিসেম্বর':'Dec'
 }
 month_patt = '(?:জানু|ফেব্রু)য়ারি|ম(?:ার্চ|ে)|এপ্রিল|জু(?:ন|লাই)|আগস্ট|(?:(?:সেপ্ট|নভ|ডিস)েম্|অক্টো)বর'
-date_patt = re.compile('(['+numer_group+']{1,2} ('+ month_patt+') ['+ numer_group+']{4}) \(ইউটিসি\)\s*(?:(?:\{\{ *[Aa]bot *\}\}|\|\}|<!--(?:(?!-->)[\s\S])*-->|<\/\S+>)\s*)*$')
+date_patt = re.compile('(['+no+']{1,2} ('+ month_patt+') ['+ no+']{4}) \(ইউটিসি\)\s*(?:(?:\{\{ *[Aa]bot *\}\}|\|\}|<!--(?:(?!-->)[\s\S])*-->|<\/\S+>)\s*)*$')
 DATE = '%d %b %Y' #pattern of the date
 setting = re.compile('\{\{\s*স্বয়ংক্রিয় সংগ্রহশালা\s*([^\}]*)\}\}')
 setting_fetch = re.compile('\| *([^= ]+) *= *([^\n\|]+)')
@@ -64,7 +63,6 @@ ns_mapping ={
     "2":'[uU]ser|ব্যবহারকারী'
 }
 c_patt = re.compile('\s*\| *current-index *= *\d*\s*|$')
-ns_patt = re.compile('(?:((?:আলাপ|ব্যবহারকারী|টেমপ্লেট|বিষয়শ্রেণী|উইকিপিডিয়া|বিশেষ|Talk|user|wikipedia|template|category|WP)(?: talk| আলাপ)?):)?(.+)',re.I)
 sep = re.compile("\s*,\s*")
 #### Constant declared #####
 ###--- Declaring util function ----#
@@ -111,27 +109,16 @@ def to_en(txt):
         except:
             s+=i
     return s
-def to_bn(txt):
-    txt = str(txt)
-    s = ""
-    for i in txt:
-        try:
-            s+=b_numers[int(i)]
-        except:
-            s+=i
-    return s
-def size(t):
-    return 
 def archive_section(match):
     content = match.group(1)
     if(is_old(content)):
         title = match.group(2).strip()
         Archive['sections'].append(title)
-        Archive["content"] += content
+        Archive["content"] = '%s%s' % (Archive["content"], content)
         return ""
     return content # skip the section
 def fetch_backlink(title,ns):
-    ns = ns_mapping[str(i.namespace().id)]
+    ns = ns_mapping[str(ns.id)]
     backlink = "(\[\[ *(?:"
     title = re.escape(title)
     backlink += ns +") *: *" + title + " *#([^\|\]]+))" #add a colon
@@ -163,12 +150,12 @@ def check_overflow(pg, prefix): # old archive has been overloaded
         pg.save("নতুন সংগ্রহশালার সূচনা")
 index = re.compile('(\$|[my][12])')
 def index_s(m):
-    return to_bn(Archive['config'][m.group(1)])
+    return to_en(Archive['config'][m.group(1)])
 #--- Util functions declared-----
 #----- Main archival function------
 def archive():
     print("Archival Script Started")
-    pages = pb.Category(bn,u'বিষয়শ্রেণী:'+config['archiveTalk']['tracker']).members()
+    pages = pb.Category(bn,u'Category:'+config['archiveTalk']['tracker']).members()
     global Archive
     for i in pages:
         Archive = {
@@ -189,7 +176,7 @@ def archive():
             title = i.title() + title
         Archive['title'] = title
         pg = pb.Page(bn, title)
-        summary = u'বট কর্তৃক %sটি অনুচ্ছেদ স্বয়ংক্রিয়ভাবে সংগ্রহশালায় স্থানান্তর' % to_bn(len(Archive['sections']))
+        summary = u'বট কর্তৃক %sটি অনুচ্ছেদ স্বয়ংক্রিয়ভাবে সংগ্রহশালায় স্থানান্তর' % en2bn(len(Archive['sections']))
         pg.text += Archive['content']
         pg.save(summary) #archive page
         backlink = fetch_backlink(i.title(with_ns=False,underscore=False),i.namespace())
@@ -200,12 +187,12 @@ def archive():
             if Archive['fixed-section'] is 0:
                 #no fix
                 continue
-            j.save(summary + u'িত হওয়ায় %sটি সংযোগ ঠিক করা হয়েছে' % (to_bn(Archive['fixed-section'])))
+            j.save(summary + u'িত হওয়ায় %sটি সংযোগ ঠিক করা হয়েছে' % (en2bn(Archive['fixed-section'])))
             Archive['backlinks'] += 1  
         check_overflow(pg, i.title())
         t = c_patt.sub('\n|current-index = %s\n' % Archive['config']['$'], Archive['config']['string'], 1)
         i.text = setting.sub('{{স্বয়ংক্রিয় সংগ্রহশালা\n' + t + '}}',i.text, 1) # update current index
         if(Archive['backlinks']):
-            summary += u' এবং %sটি পশ্চাৎসংযোগ ঠিক করা হয়েছে' % (to_bn(Archive['backlinks']))
+            summary += u' এবং %sটি পশ্চাৎসংযোগ ঠিক করা হয়েছে' % (en2bn(Archive['backlinks']))
         i.save(summary) # main page
     print("Archival Script End")
