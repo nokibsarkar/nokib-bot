@@ -10,7 +10,7 @@ def en2bn(txt):
     st=""
     for i in txt:
         if(i.isdigit()):
-            st+=numers[int(i)]
+            st+=b_numers[int(i)]
         else:
             st+=i
     return st
