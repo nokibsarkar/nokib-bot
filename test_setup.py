@@ -3,10 +3,9 @@ import json
 import datetime as dt
 import time
 import pywikibot as pb
-import os
 bn = pb.Site("test","wikipedia")
+numers = ["০", "১","২","৩","৪","৫","৬","৭","৮","৯"]
 def en2bn(txt):
-    refs = ["০", "১","২","৩","৪","৫","৬","৭","৮","৯"]
     txt = str(txt)
     st=""
     for i in txt:
