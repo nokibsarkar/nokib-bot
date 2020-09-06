@@ -10,13 +10,13 @@ def en2bn(txt):
     st=""
     for i in txt:
         if(i.isdigit()):
-            st+=refs[int(i)]
+            st+=numers[int(i)]
         else:
             st+=i
     return st
 now = dt.datetime.now()
 yesterday = now - dt.timedelta(days=1)
-config = json.loads(pb.Page(bn,"User:নকীব বট/config.json").text)
+config = json.loads(pb.Page(bn,"user:নকীব বট/config.json").text)
 r = pb.data.api.Request
 ISO = "%Y-%m-%dT%H:%M:%SZ"
 months = "((জান|ফেব্র)ুয়ার[িী]|ম(ে|ার্চ)|এপ্রিল|জু(ন|লা[ইঈ])|[অআ]গা?[সষ]্ট|((সেপ্ট|ন[বভ]|ডিস)েম্|অক্টো)[ভব]র)"
