@@ -295,13 +295,27 @@ def manageNominee():
     pages = r(parameters=data,site=bn).submit()["query"]["pages"]
     for id in cats.keys():
         page = pages[id]
-        D[cats[id]]=[]
+        D[id]={}
         txt = page["revisions"][0]["slots"]["main"]["*"]
         entries = pat.finditer(txt)
         for entry in entries:
             R = {}
             R["title"] = entry.group("title")
             talk = pb.Page(bn,"talk:"+R["title"])
+            print(talk)
+            #---Start checking for redirect ---#
+            main = talk.toggleTalkPage()
+            orig = main.title()
+            try:
+                if(main.isRedirectPage()):
+                    main = main.getRedirectTarget()
+                else:
+                    main = main.moved_target()
+                D[id][orig] = main.title()
+                talk = main.toggleTalkPage()
+            except pb.NoMoveTarget:
+                pass
+            #---End redirect checking---#
             R["page"] = to_s(entry.group("page"),"১").strip()
             R["user"] = to_s(entry.group("user")).strip()
             rev_template = re.compile("\{\{\s*(([Tt]alk|আলাপ)\s*:\s*[^/]+)?\/ভালো? নিবন্ধ"+R["page"]+"\s*\}\}")
@@ -412,7 +426,12 @@ def manageNominee():
                  talk.save("{{ভালো নিবন্ধের জন্য মনোনীত}}",quiet=True)
             except:
                  pass
-            #D[cats[id]].append(R)
+    #--Updating Links----#
+    patt_s = re.compile('(\{\{ *প্রভানিভুক্তি *\| *(?:1 *= *)?)((?:(?! *[\|\}]).)+)( *[\|\}])')
+    for i in D:
+        cat = pb.Page(bn,gan_pref + cats[i])
+        cat.text = patt_s.sub(lambda m: '%s%s%s' % (m.group(1), D[i][m.group(2)] if m.group(2) in D[i] else m.group(2) ,m.group(3)), cat.text)
+        cat.save('[[%s]]-এর সংযোগ ঠিক করা হল' % ']], [['.join(list(D[i].keys())))
 def manageGAR():
     pages = pb.Category(bn,u"বিষয়শ্রেণী:পুনর্মূল্যায়ন প্রয়োজন এমন ভালো নিবন্ধ").members()
     R ={}
