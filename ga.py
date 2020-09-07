@@ -161,7 +161,7 @@ def manageGATalk():
             k = Ah_fetch.search(params)
             #----beta start ----#
             m = ah_fetch.findall(params)
-            for pa in params:
+            for pa in m:
                 if(pa[1]=="GAN"):
                     first = False
                     break
