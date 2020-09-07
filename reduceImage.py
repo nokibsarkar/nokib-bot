@@ -122,7 +122,7 @@ def reduceFUR():
                 resize_svg(tree, dim[0],dim[1])
                 tree.write(title)
                 t = True
-             except Exception as e:
+            except Exception as e:
                  print("Something occured %s" % e)
                  os.remove(title)
         else:
