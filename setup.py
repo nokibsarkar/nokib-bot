@@ -4,7 +4,7 @@ import datetime as dt
 import time
 import pywikibot as pb
 bn = pb.Site("bn","wikipedia")
-b_numers = ["০", "১","২","৩","৪","৫","৬","৭","৮","৯"]
+b_numers = ['০','১','২','৩','৪','৫','৬','৭','৮','৯']
 def en2bn(txt):
     txt = str(txt)
     st=""
