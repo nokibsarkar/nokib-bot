@@ -143,6 +143,7 @@ def getCat(title):
             R["removed"] = patt.sub("",t.text)
             return R
 def manageGATalk():
+    print(config)
     cat = pb.Category(bn,"বিষয়শ্রেণী:" + config["tracker"]).members()
     for talk in cat:
         title = talk.title()[5:] #main article's title
@@ -161,7 +162,7 @@ def manageGATalk():
             #----beta start ----#
             m = ah_fetch.findall(params)
             for pa in params:
-                if(p[1]=="GAN"):
+                if(pa[1]=="GAN"):
                     first = False
                     break
             mx = str(len(params) + 1)
