@@ -116,16 +116,15 @@ def status(txt,d=""):
     }
     return switcher.get(txt,d)
 def getCat(title):
-    print("Getting Category about:",title)
     R={
     	"date":"",
      "cat":"",
-     "page":"১"
+     "page":"১",
+     "catpage": pb.Page(bn,gan_pref+'/'+config['default'])
     }
-    print(entry_pref+re.escape(title)+entry_suf)
+    R['removed'] = R['catpage'].text
     patt = re.compile(entry_pref+re.escape(title)+entry_suf)
     for cat in cats.values():
-        print("Checking the category:",cat)
         t = pb.Page(bn,gan_pref+cat)
         k = patt.search(t.text)
         if(k):
@@ -143,7 +142,6 @@ def getCat(title):
             R["removed"] = patt.sub("",t.text)
             return R
 def manageGATalk():
-    print(config)
     cat = pb.Category(bn,"বিষয়শ্রেণী:" + config["tracker"]).members()
     for talk in cat:
         title = talk.title()[5:] #main article's title
@@ -271,7 +269,7 @@ def manageGATalk():
         talk.text = gan_template.sub("",talk.text)
         try:
             talk.save("{{নিবন্ধ ইতিহাস}} যুক্ত/হালনাগাদ করা হয়েছে")
-            t=R["catpage"]
+            t = R["catpage"]
             t.text = R["removed"]
             t.save("[["+talk.title()[5:]+"]] ভুক্তি অপসারণ")
         except:
