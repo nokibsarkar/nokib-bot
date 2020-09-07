@@ -302,7 +302,6 @@ def manageNominee():
             R = {}
             R["title"] = entry.group("title")
             talk = pb.Page(bn,"talk:"+R["title"])
-            print(talk)
             #---Start checking for redirect ---#
             main = talk.toggleTalkPage()
             orig = main.title()
