@@ -142,6 +142,7 @@ def reduceFUR():
                  ignore_warnings = fetch_csrf
                  )
             i.save(summary)
-        except:
-            print("Couldn't upload")
+        except Exception as e:
+            print("Couldn't upload: %s" % e)
+            pass
         os.remove(title)
