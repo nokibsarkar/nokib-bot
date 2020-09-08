@@ -105,6 +105,9 @@ def thumb(path):
 def fetch_csrf(k):
     return k
 def reduceFUR():
+    #---Login
+    pb.LoginManager(site=bn).login()
+    #----
     summary = config['reduceImage']['uploadSummary']
     files = pb.Category(bn,u"বিষয়শ্রেণী:" + config['reduceImage']['tracker']).members()
     for i in files:
