@@ -107,7 +107,7 @@ def detect_edit_war():
             bid = 0
             if(title in backlog):
                 bid = backlog[title]
-            st = u"\n'''শিরোনাম:'''[["+title+u"]]([{{subst:fullurl:"+ title +"|action=watch}} নজর রাখুন] &bull; [{{subst:fullurl:"+ title +'|action=protect}} সুরক্ষা])\n{|class="wikitable collapible mw-collapsed"\n|-\n!সংস্করণ !!সম্পাদক !!সম্পাদনার ধরন\n|-\n'
+            st = u"\n'''শিরোনাম:'''[["+title+u"]]([{{subst:fullurl:"+ title +"|action=watch}} নজর রাখুন] &bull; [{{subst:fullurl:"+ title +'|action=protect}} সুরক্ষা])\n{|class="wikitable mw-collapsed"\n|-\n!সংস্করণ !!সম্পাদক !!সম্পাদনার ধরন\n|-\n'
             for j in revs:
                 if(bid == j['revid'] and attacks < 6):
                     print("Already mentioned")
