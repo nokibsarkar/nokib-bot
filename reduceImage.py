@@ -106,7 +106,9 @@ def fetch_csrf(k):
     return k
 def reduceFUR():
     #---Login
-    pb.login.LoginManager(site=bn).login()
+    os.system(
+    	"python3 /shared/pywikibot/stable/pwb.py login"
+    	)
     #----
     summary = config['reduceImage']['uploadSummary']
     files = pb.Category(bn,u"বিষয়শ্রেণী:" + config['reduceImage']['tracker']).members()
