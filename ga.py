@@ -302,7 +302,7 @@ def manageNominee():
             R = {}
             R["title"] = entry.group("title")
             talk = pb.Page(bn,"talk:"+R["title"])
-            #---Start checking for redirect ---#
+            """#---Start checking for redirect ---#
             main = talk.toggleTalkPage()
             orig = main.title()
             try:
@@ -314,7 +314,7 @@ def manageNominee():
                 talk = main.toggleTalkPage()
             except pb.NoMoveTarget:
                 pass
-            #---End redirect checking---#
+            """#---End redirect checking---#
             R["page"] = to_s(entry.group("page"),"১").strip()
             R["user"] = to_s(entry.group("user")).strip()
             rev_template = re.compile("\{\{\s*(([Tt]alk|আলাপ)\s*:\s*[^/]+)?\/ভালো? নিবন্ধ"+R["page"]+"\s*\}\}")
