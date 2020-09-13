@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*
-import editathon #Updating editathon data
 import pywikibot as pb
 import json
 import re
 import datetime as dt
 import time
+
 now = dt.datetime.now()
 bn = pb.Site("bn","wikipedia")
 r = pb.data.api.Request
@@ -271,6 +271,9 @@ for i in sites:
         if config["test"]["status"] is False:
             config["test"]["count"] = float('inf') # edit count is unlimited
         manageCategory(site,config)
+#-----
+import editathon #Updating editathon data
+#----
 fp = open("setting.json","w")
 fp.write(json.dumps(settings, ensure_ascii=False,indent=4))
 fp.close()
