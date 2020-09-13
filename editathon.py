@@ -1,7 +1,7 @@
 from setup import *
 config = config['auditEditathon']
-content = u"""'''তালিকাটি একটি [[ব্যবহারকারী:নকীব বট|বটের]] মাধ্যমে হালনাগাদ করা হয়। সুতরাং আপনি যদি হাতে কোনো হালনাগাদ করেও থাকেন, তবে পরবর্তী হালনাগাদের সময় আপনার সম্পাদনা বাতিল হয়ে যেতে পারে।
-সর্বশেষ হালনাগাদের সময়: {{সময় আগে|%s}}'''""" % dt.datetime.utcnow().isoformat()[:19]
+content = u"""{{ব্যবহারকারী:নকীব বট/সতর্কবার্তা}}
+'''<big>সর্বশেষ হালনাগাদের সময়: {{সময় আগে|%s|purge=y}}</big>'''""" % dt.datetime.utcnow().isoformat()[:19]
 def date_diff(d):
     d = dt.datetime.strptime(d,ISO)
     d = (now - d).total_seconds()
