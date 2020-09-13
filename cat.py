@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*
+import editathon #Updating editathon data
 import pywikibot as pb
 import json
 import re
@@ -14,7 +15,7 @@ p_ref = re.compile("(। *)*(?P<ref>(<ref([^>]+)?>((?!<\/ref>)[\s\S])+<\/ref>\s*
 month = ["জানুয়ারি","ফেব্রুয়ারি","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"]
 p_space = re.compile('(\S)(।+| +।+ *| *।+ {2,})+(<ref|\}\}|\{\{|\]\]|"|\S)')
 interwiki = re.compile("\[\[ *:? *(?P<lang>[a-z]{2}) *:([^\|]+\|)?(?P<link>[^\]]+)\]\]")
-talk_temp = re.compile(u"\{\{ *আলাপ পাতা *[\|\}]")
+talk_temp = re.compile(u"\{\{ *(?:আলাপ পাতা|[tT]alk page) *[\|\}]")
 def p_space_s(match):
     global p_count
     l = match.group(3)
@@ -67,6 +68,7 @@ noref_c = re.compile("\{\{\s*উৎসহীন\s*")
 config =json.loads(pb.Page(bn,"user:নকীব বট/config.json").text)
 skipTokens = config['generalCorrection']['spaceAfterPeriod']['singleSkipToken']
 settings = json.loads(open("setting.json","r").read())
+tagged = re.compile("\{\{ *আন্তঃউইকিসংযোগ প্রয়োজন *\}\}")
 def has_iw(pageid):
     data = {
     "action": "query",
@@ -179,7 +181,7 @@ def patrolRecentChange():
                             iw = iw.group("lang")+":"+iw.group("link")
                             pg.text+= "\n[["+iw+"]]"
                             summary.append("আন্তঃউইকিসংযোগ স্থাপন ("+iw+"); ")
-                        else:
+                        elif tagged.search(pg.text) is None:
                             pg.text = "{{আন্তঃউইকিসংযোগ প্রয়োজন}}\n" + pg.text
                             summary.append("{{আন্তঃউইকিসংযোগ প্রয়োজন}} যোগ; ")
                 if(working.search(pg.text)):
