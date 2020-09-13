@@ -165,9 +165,9 @@ def patrolRecentChange():
                     continue
                 #----Add {{talk page}}
                 talk = pg
-                if('Talk:'!= talk.namespace()):
+                if('Talk:' != talk.namespace()):
                     talk = pg.toggleTalkPage()
-                if(talk.namespace() == 'Talk:' and (talk.exists() == False or talk_temp.search(talk.text)==None)):
+                if(talk.namespace() == 'Talk:' and (talk.exists() is False or talk_temp.search(talk.text) is None)):
                     talk.text = u'{{আলাপ পাতা}}\n' + talk.text
                     talk.save(u"বট কর্তৃক আলাপ পাতায় {{আলাপ পাতা}} যোগ")
                 #----
