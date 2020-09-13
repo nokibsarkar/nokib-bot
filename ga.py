@@ -8,7 +8,7 @@ date = re.compile("(?P<date>[" + no + "]{1,2} " + months + ",? [" + no + "]{4}|"
 entry = re.compile(entry_pref + "(?P<name>[^\|\}]+)" + entry_suf)
 res_patt = re.compile("\{\{\s*(?P<status>([Ff]ailed|[Dd]elisted)?)[gG]A\s*[^\}]*\}\}")
 ga_tag = re.compile("\{\{\s*(ভালো নিবন্ধ|[gG]ood article)\s*\}\}")
-Users = re.compile("(?:\{\{\s*(?:[pP]ing|উত্তর|[rR]e(?:ply(?: to)?)?)\s*\||\[\[\s*([uU]ser|ব্যবহারকারী)\s*:)\s*([^\|\}\]]+)")
+Users = re.compile("(?:\{\{ *(?:[pP]ing|উত্তর|[rR]e(?:ply(?: to)?)?) *\||\[\[ *(?:[uU]ser|ব্যবহারকারী) *:) *([^\|\}\]]+)")
 level = re.compile("<\$নববি(\S)\$>")
 gan_template = re.compile("\{\{\s*([gG]A nominee|ভালো নিবন্ধের জন্য মনোনীত)\s*(?P<ext>\|[^\}]+)\}\}")
 #------Article history Start ----#
@@ -282,7 +282,7 @@ def to_s(k,s=""):
 def manageNominee():
     global config
     config = config["manageNominee"]
-    D ={} #{"category":{"prefix":"","suffix":"","note":"","status":""}
+    D ={}
     warns = config["manageRevPage"]["warnings"] 
     data ={
             "action":"query",
@@ -377,14 +377,11 @@ def manageNominee():
                             summary = "পর্যালোচক সম্ভবত ব্যস্ত; তাই মূল প্রকল্পে অবহিত করা হয়েছে। এই ব্যাপারে পর্যালোচক ও মনোনয়ককেও জানানো হয়েছে"
                             revPage.text = level.sub("<$নববি৪$>",revPage.text,count=1)
                     else:
-                        #"mention all the users")
-                        subst = Users.findall(revPage.text)
-                        s = set()
-                        for i in subst:
-                            s.add(i[3])
-                        s.discard(u'নকীব বট')
-                        subst = u"[[ব্যবহারকারী:" + "|]], [[ব্যবহারকারী:".join(s) +"|]]"
-                        revPage.text+= u"\n=== পর্যালোচনার অগ্রগতি ===\nপ্রিয় " + subst
+                        #"mention all the users"
+                        subst = set(Users.findall(revPage.text))
+                        subst.discard(u'নকীব বট')
+                        subst = u"[[ব্যবহারকারী:" + "|]], [[ব্যবহারকারী:".join(subst) +"|]]"
+                        revPage.text += u"\n=== পর্যালোচনার অগ্রগতি ===\nপ্রিয় " + subst
                         revPage.text += u"<br/>{{subst:user:নকীব বট/বিজ্ঞপ্তি/১}}"
                         summary = u"সংশ্লিষ্ট সকলকে অবহিত করতে বিজ্ঞপ্তি"
                     try:
@@ -426,11 +423,11 @@ def manageNominee():
             except:
                  pass
     #--Updating Links----#
-    patt_s = re.compile('(\{\{ *প্রভানিভুক্তি *\| *(?:1 *= *)?)((?:(?! *[\|\}]).)+)( *[\|\}])')
+    """patt_s = re.compile('(\{\{ *প্রভানিভুক্তি *\| *(?:1 *= *)?)((?:(?! *[\|\}]).)+)( *[\|\}])')
     for i in D:
         cat = pb.Page(bn,gan_pref + cats[i])
         cat.text = patt_s.sub(lambda m: '%s%s%s' % (m.group(1), D[i][m.group(2)] if m.group(2) in D[i] else m.group(2) ,m.group(3)), cat.text)
-        cat.save('[[%s]]-এর সংযোগ ঠিক করা হল' % ']], [['.join(list(D[i].keys())))
+        cat.save('[[%s]]-এর সংযোগ ঠিক করা হল' % ']], [['.join(list(D[i].keys())))"""
 def manageGAR():
     pages = pb.Category(bn,u"বিষয়শ্রেণী:পুনর্মূল্যায়ন প্রয়োজন এমন ভালো নিবন্ধ").members()
     R ={}
