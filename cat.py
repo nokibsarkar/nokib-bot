@@ -4,9 +4,9 @@ import json
 import re
 import datetime as dt
 import time
-
 now = dt.datetime.now()
 bn = pb.Site("bn","wikipedia")
+bn.login()
 r = pb.data.api.Request
 ISO = "%Y-%m-%dT%H:%M:%SZ"
 is_no_ref = re.compile('<\/ *ref>|\{\{ *sfn *\|')
