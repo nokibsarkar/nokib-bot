@@ -11,3 +11,5 @@ if(config["goodArticle"]["status"]):
     ga.manageGAR()
     if(config["goodArticle"]["manageNominee"]["status"]):
         ga.manageNominee()
+if(config['auditEditathon']['status']):
+    import editathon

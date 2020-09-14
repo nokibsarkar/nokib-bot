@@ -6,7 +6,6 @@ import datetime as dt
 import time
 now = dt.datetime.now()
 bn = pb.Site("bn","wikipedia")
-bn.login()
 r = pb.data.api.Request
 ISO = "%Y-%m-%dT%H:%M:%SZ"
 is_no_ref = re.compile('<\/ *ref>|\{\{ *sfn *\|')
@@ -271,9 +270,6 @@ for i in sites:
         if config["test"]["status"] is False:
             config["test"]["count"] = float('inf') # edit count is unlimited
         manageCategory(site,config)
-#-----
-import editathon #Updating editathon data
-#----
 fp = open("setting.json","w")
 fp.write(json.dumps(settings, ensure_ascii=False,indent=4))
 fp.close()
