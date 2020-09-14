@@ -4,16 +4,10 @@ content = u"""{{ব্যবহারকারী:নকীব বট/সতর�
 '''<big>সর্বশেষ হালনাগাদের সময়: {{সময় আগে|%s|purge=y}}</big>'''""" % dt.datetime.utcnow().isoformat()[:19]
 def date_diff(d):
     d = dt.datetime.strptime(d,ISO)
-    d = (now - d).total_seconds()
-    if d < 3600:
+    d = (now - d).days
+    if d is 0:
         #less than an hour
-        return 'এক ঘন্টারও কম সময় পূর্বে'
-    if d < 86400:
-        #less than a day but more than an hour
-        d = int(d*0.000277777)
-        return '%s ঘন্টা পূর্বে' % en2bn(d)
-    #less than a day but more than an hour
-    d = int(d*0.00001157407)
+        return 'এক দিনেরও কম সময় পূর্বে'
     return '%s দিন পূর্বে' % en2bn(d)
 
 def fetch(m):
@@ -41,7 +35,7 @@ def fetch(m):
     mp = dict(
     	[(i['title'],(en2bn(i['revisions'][0]['size']),date_diff(i['revisions'][0]['timestamp'])) if 'missing' not in i else ('','')) for i in res]
     )
-    st = '%s\n==' % content + m.group(1) + '==\n{|class="wikitable sortable" style="width:100%"\n|-\n!ক্রম!!নিবন্ধ!!ইংরেজি!!আকার!!সর্বশেষ সম্পাদনা\n|-\n'
+    st = '%s\n==' % content + m.group(1).strip() + '==\n{|class="wikitable sortable" style="width:100%"\n|-\n!ক্রম!!নিবন্ধ!!ইংরেজি!!আকার!!সর্বশেষ সম্পাদনা\n|-\n'
     for i in range(len(data['titles'])):
         j = mp[data['titles'][i]]
         st += '|%s|| [[%s]] || %s || %s ||%s\n|-\n' % (
@@ -52,7 +46,7 @@ def fetch(m):
 def summary():
     sects = config['sections']
     patt = re.compile(
-	    '\n== *({0}) *==\n((?:(?!\n== *(?:{0}) *==\n).)+)'.format('|'.join(sects)),
+	    '\n==+ *([^=]+)==+\n((?:(?!\n==+ *(?:[^=]+)==+\n).)+)',
 	    re.DOTALL
     )
     source = pb.Page(bn,config['source'])
