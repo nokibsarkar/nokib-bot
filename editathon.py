@@ -12,7 +12,7 @@ def date_diff(d):
 
 def fetch(m):
     global content
-    txt = m.group(2)
+    txt = m.group(3)
     articles = re.compile(
     	"\| *[০১২৩৪৫৬৭৮৯]+ *\|\| *\[\[([^\]\|]+)(?:\|[^\]]+)?\]\] *\|\|((?:(?!\|\|).)+)"
     	)
@@ -35,7 +35,7 @@ def fetch(m):
     mp = dict(
     	[(i['title'],(en2bn(i['revisions'][0]['size']),date_diff(i['revisions'][0]['timestamp'])) if 'missing' not in i else ('','')) for i in res]
     )
-    st = '%s\n==' % content + m.group(1).strip() + '==\n{|class="wikitable sortable" style="width:100%"\n|-\n!ক্রম!!নিবন্ধ!!ইংরেজি!!আকার!!সর্বশেষ সম্পাদনা\n|-\n'
+    st = '%s\n%s' % (content, m.group(1)) + m.group(2).strip() + '%s\n{|class="wikitable sortable" style="width:100%"\n|-\n!ক্রম!!নিবন্ধ!!ইংরেজি!!আকার!!সর্বশেষ সম্পাদনা\n|-\n' % m.group(1)
     for i in range(len(data['titles'])):
         j = mp[data['titles'][i]]
         st += '|%s|| [[%s]] || %s || %s ||%s\n|-\n' % (
@@ -46,7 +46,7 @@ def fetch(m):
 def summary():
     sects = config['sections']
     patt = re.compile(
-	    '\n==+ *([^=]+)==+\n((?:(?!\n==+ *(?:[^=]+)==+\n).)+)',
+	    '\n(==+) *([^=]+)==+\n((?:(?!\n==+ *(?:[^=]+)==+\n).)+)',
 	    re.DOTALL
     )
     source = pb.Page(bn,config['source'])
