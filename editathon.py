@@ -1,4 +1,5 @@
 from setup import *
+bn.login()
 config = config['auditEditathon']
 content = u"""{{ব্যবহারকারী:নকীব বট/সতর্কবার্তা}}
 '''<big>সর্বশেষ হালনাগাদের সময়: {{সময় আগে|%s|purge=y}}</big>'''""" % dt.datetime.utcnow().isoformat()[:19]
@@ -35,7 +36,7 @@ def fetch(m):
     mp = dict(
     	[(i['title'],(en2bn(i['revisions'][0]['size']),date_diff(i['revisions'][0]['timestamp'])) if 'missing' not in i else ('','')) for i in res]
     )
-    st = '%s\n%s' % (content, m.group(1)) + m.group(2).strip() + '%s\n{|class="wikitable sortable" style="width:100%"\n|-\n!ক্রম!!নিবন্ধ!!ইংরেজি!!আকার!!সর্বশেষ সম্পাদনা\n|-\n' % m.group(1)
+    st = '%s\n%s' % (content, m.group(1)) + m.group(2).strip() + m.group(1) +'\n{|class="wikitable sortable" style="width:100%"\n|-\n!ক্রম!!নিবন্ধ!!ইংরেজি!!আকার!!সর্বশেষ সম্পাদনা\n|-\n'
     for i in range(len(data['titles'])):
         j = mp[data['titles'][i]]
         st += '|%s|| [[%s]] || %s || %s ||%s\n|-\n' % (
@@ -44,7 +45,6 @@ def fetch(m):
     content = st + '|}'
     return ''
 def summary():
-    sects = config['sections']
     patt = re.compile(
 	    '\n(==+) *([^=]+)==+\n((?:(?!\n==+ *(?:[^=]+)==+\n).)+)',
 	    re.DOTALL
