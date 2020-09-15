@@ -3,7 +3,7 @@ import os
 from PIL import Image as im
 from xml.etree import ElementTree as etree
 #--Image resize
-temp = re.compile(u"\{\{ *(?:non-free reduce|মুক্ত নয় হ্রাস করুন)[^\}]*\}\}",re.I)
+temp = re.compile(u"\{\{ *(?:[Nn]on-free reduce|মুক্ত নয় হ্রাস করুন)[^\}]*\}\}",re.I)
 #attribute to zervick
 def parse_length(value, def_units='px'):
     """Parses value as SVG length and returns it in pixels, or a negative scale (-1 = 100%)."""
