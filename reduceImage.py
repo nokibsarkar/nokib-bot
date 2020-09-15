@@ -126,7 +126,7 @@ def reduceFUR():
                 tree.write(title)
                 t = True
             except Exception as e:
-                 print("Something occured %s" % e)
+                 print("Something occured: Already Reduced")
                  os.remove(title)
         else:
             t = thumb(title)
