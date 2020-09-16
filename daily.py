@@ -2,9 +2,9 @@ from setup import config
 if(config['archiveTalk']['status']):
     import archive
     archive.archive()
-if(config["reduceImage"]['status']):
+"""if(config["reduceImage"]['status']):
     import reduceImage
-    reduceImage.reduceFUR()
+    reduceImage.reduceFUR()"""
 if(config["goodArticle"]["status"]):
     import ga
     ga.manageGATalk()
