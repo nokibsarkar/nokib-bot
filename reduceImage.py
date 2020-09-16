@@ -117,16 +117,16 @@ def reduceFUR():
             continue
         t = False
         if(title[-4:].lower() == '.svg'):
-            with open (title,"r") as fp:
-                tree = etree.parse(fp)
-            dim = i.latest_file_info
-            dim = get_dimension((dim.width,dim.height), config['reduceImage']['tag']['minDeltaRate'], config['reduceImage']['tag']['resolution'])
             try:
+                with open (title,"r") as fp:
+                    tree = etree.parse(fp)
+                dim = i.latest_file_info
+                dim = get_dimension((dim.width,dim.height), config['reduceImage']['tag']['minDeltaRate'], config['reduceImage']['tag']['resolution'])
                 resize_svg(tree, dim[0],dim[1])
                 tree.write(title)
                 t = True
             except Exception as e:
-                 print("Something occured: Already Reduced")
+                 print("Something occured: %s" % e)
                  os.remove(title)
         else:
             t = thumb(title)
