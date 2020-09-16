@@ -69,8 +69,8 @@ def resize_svg(tree, target_width, target_height):
         page_height = viewbox[2] / twidth * theight
         offsety = (page_height - viewbox[3]) / 2
     svg.set(
-    	    'viewBox', 
-    	    '{} {} {} {}'.format(
+            'viewBox', 
+            '{} {} {} {}'.format(
                 viewbox[0] - offsetx,
                 viewbox[1] - offsety,
                 page_width,
@@ -117,17 +117,17 @@ def reduceFUR():
             continue
         t = False
         if(title[-4:].lower() == '.svg'):
+            with open (title,"r") as fp:
+                tree = etree.parse(fp)
+            dim = i.latest_file_info
+            dim = get_dimension((dim.width,dim.height), config['reduceImage']['tag']['minDeltaRate'], config['reduceImage']['tag']['resolution'])
             try:
-                with open (title,"r") as fp:
-                    tree = etree.parse(fp)
-                dim = i.latest_file_info
-                dim = get_dimension((dim.width,dim.height), config['reduceImage']['tag']['minDeltaRate'], config['reduceImage']['tag']['resolution'])
                 resize_svg(tree, dim[0],dim[1])
                 tree.write(title)
                 t = True
             except Exception as e:
-                 print("Something occured: %s" % e)
-                 os.remove(title)
+                 print("%s is Already reduced" % title)
+                 pass
         else:
             t = thumb(title)
         i.text = temp.sub(u"{{subst:furd}}", i.text,1)
