@@ -14,6 +14,7 @@ def manageRedirectedItem():
             	ignore_conflicts=['description','sitelink','statement']
             )
         except pb.exceptions.NoPage:
+            print("Redirected has no Page")
             source.setSitelink(target,summary=summary)
             pass
         break
