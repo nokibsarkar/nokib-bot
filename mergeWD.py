@@ -8,7 +8,11 @@ def manageRedirectedItem():
         target = i.getRedirectTarget()
         try:
             target = target.data_item()
-            source.mergeInto(target,summary=summary)
+            source.mergeInto(
+            	target,
+            	summary=summary,
+            	ignore_conflicts=['description','sitelink','statement']
+            )
         except pb.exceptions.NoPage:
             source.setSitelink(target,summary=summary)
             pass
