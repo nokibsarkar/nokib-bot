@@ -12,5 +12,5 @@ def manageRedirectedItem():
         except pb.exceptions.NoPage:
             source.setSitelink(target,summary=summary)
             pass
-    break
+        break
     print("Completed")
