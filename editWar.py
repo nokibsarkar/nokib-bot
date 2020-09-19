@@ -226,7 +226,7 @@ def patrolRecentChange():
         if((now_st - t) < 7):
             #did not cross the limit
             continue
-        cases = u'%s\n|[[ব্যবহারকারী:%s]]||%s||~~~~\n|-' % (case, i, ', '.join(patt.findall(i)))
+        cases = u'%s\n|[[ব্যবহারকারী:%s]]||%s||~~~~\n|-' % (cases, i, ', '.join(patt.findall(i)))
     ##--- check if anyone who did not apply for renaming
     if(cases != ''):
         title = u"উইকিপিডিয়া:নীতিমালাবহির্ভূত ব্যবহারকারী নাম/%s %s" % (en2bn(now.year), month[now.month -1])
