@@ -203,26 +203,29 @@ def patrolRecentChange():
         pg.save(u'পরীক্ষার ফলাফল ঘোষণা')
     cases = '' #blank it for new
     #--check for backlogs ---#
-    for i in backlog.copy():
-        t = int(backlog[i]) #Number Days after 01-01-1970
-        if((now_st - t) < 7):
-            continue
-        data = {
+    data = {
             "action": "query",
             "format": "json",
-            "list": "recentchanges",
+            "prop": "revisions",
             "utf8": 1,
-            "rcuser": u"ব্যবহারকারী:"+ i,
-            "rcprop": "",
-            "rclimit": "1",
-            "rctype": "edit",
-            "rctitle": u"উইকিপিডিয়া:ব্যবহারকারী নাম পরিবর্তনের আবেদন",
-            "rcslot": "main"
+            "rvprop": "user",
+            "rvlimit": "max",
+            "titles": u"উইকিপিডিয়া:ব্যবহারকারী নাম পরিবর্তনের আবেদন",
+            "rvslot": "main",
+            "rvstart":last_access
         }
-        res = r(bn,parameters=data).submit()['query']['recentchanges']
-        if(len(res)==0):
-            cases+='\n|[[ব্যবহারকারী:' + i +']]||'+', '.join(patt.findall(i))+'||~~~~\n|-'
-        del backlog[i]
+        revs = r(bn,parameters=data).submit()['query']['pages'].values()[0]['revisions']
+    for i in revs:
+        user = i['user']
+        if user not in backlog:
+            #Skip the username
+            continue
+        t = int(backlog[user]) #Number Days after 01-01-1970
+        if((now_st - t) < 7):
+            #did not cross the limit
+            continue
+        cases = u'%s\n|[[ব্যবহারকারী:%s]]||%s||~~~~\n|-' % (case, user, ', '.join(patt.findall(user)))
+        del backlog[user]
     ##--- check if anyone was detected
     if(cases != ''):
         title = u"উইকিপিডিয়া:নীতিমালাবহির্ভূত ব্যবহারকারী নাম/%s %s" % (month[now.month -1], en2bn(now.year))
