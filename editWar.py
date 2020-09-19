@@ -214,21 +214,22 @@ def patrolRecentChange():
             "rvslot": "main",
             "rvstart":last_access
         }
-        revs = r(bn,parameters=data).submit()['query']['pages'].values()[0]['revisions']
+    revs = r(bn,parameters=data).submit()['query']['pages'].values()[0]['revisions']
     for i in revs:
         user = i['user']
         if user not in backlog:
             #Skip the username
             continue
-        t = int(backlog[user]) #Number Days after 01-01-1970
+        del backlog[user]
+    for i in backlog:
+        t = int(backlog[i]) #Number Days after 01-01-1970
         if((now_st - t) < 7):
             #did not cross the limit
             continue
-        cases = u'%s\n|[[ব্যবহারকারী:%s]]||%s||~~~~\n|-' % (case, user, ', '.join(patt.findall(user)))
-        del backlog[user]
-    ##--- check if anyone was detected
+        cases = u'%s\n|[[ব্যবহারকারী:%s]]||%s||~~~~\n|-' % (case, i, ', '.join(patt.findall(i)))
+    ##--- check if anyone who did not apply for renaming
     if(cases != ''):
-        title = u"উইকিপিডিয়া:নীতিমালাবহির্ভূত ব্যবহারকারী নাম/%s %s" % (month[now.month -1], en2bn(now.year))
+        title = u"উইকিপিডিয়া:নীতিমালাবহির্ভূত ব্যবহারকারী নাম/%s %s" % (en2bn(now.year), month[now.month -1])
         pg = pb.Page(bn,title)
         pg.text = appendTable(pg.text, cases)
         pg.save(u'বট কর্তৃক নীতিমালাবহির্ভূত ব্যবহারকারীর নামের তালিকা হালনাগাদ করা হচ্ছে')
