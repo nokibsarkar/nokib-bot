@@ -85,7 +85,6 @@ def detect_edit_war():
         batch = r(site=bn,parameters=data).submit()
         c = "query-continue" in batch
         if(c):
-            print(batch['query-continue'])
             if("rccontinue" in batch["query-continue"]["recentchanges"]):
                 data1["rccontinue"] = batch["query-continue"]["recentchanges"]["rccontinue"]
             else:
@@ -187,7 +186,7 @@ def appendTable(table, data):
     data += "\n|}"
     s = re.subn("\n\|\}" ,data, table, 1)
     if s[1] is 0:
-        table += u'\n{|class="wikitable sortable" style="width:100%"\n|-\n!ব্যবহারকারী !!ব্যবহারকারী নাম !!নীতিমালাবহির্ভূত অংশ\n|-' + data
+        table += u'\n{|class="wikitable sortable" style="width:100%"\n|-\n!ব্যবহারকারী নাম !!নীতিমালাবহির্ভূত অংশ !!তারিখ\n|-' + data
     else:
         table = s[0]
     return table
@@ -208,25 +207,34 @@ def patrolRecentChange():
             "format": "json",
             "prop": "revisions",
             "utf8": 1,
+            "rvdir":"newer",
             "rvprop": "user",
             "rvlimit": "max",
             "titles": u"উইকিপিডিয়া:ব্যবহারকারী নাম পরিবর্তনের আবেদন",
-            "rvslot": "main",
+            "rvslots": "main",
             "rvstart":last_access
         }
-    revs = r(bn,parameters=data).submit()['query']['pages'].values()[0]['revisions']
+    revs = list(r(bn,parameters=data).submit()['query']['pages'].values())[0]
+    if 'revisions' in revs:
+        revs = revs['revisions']
+    else:
+        revs = []
     for i in revs:
+        if 'userhidden' in i:
+            #username has been hidden
+            continue
         user = i['user']
         if user not in backlog:
             #Skip the username
             continue
         del backlog[user]
-    for i in backlog:
+    for i in backlog.copy():
         t = int(backlog[i]) #Number Days after 01-01-1970
         if((now_st - t) < 7):
             #did not cross the limit
             continue
-        cases = u'%s\n|[[ব্যবহারকারী:%s]]||%s||~~~~\n|-' % (cases, i, ', '.join(patt.findall(i)))
+        cases = u'%s\n|[[ব্যবহারকারী:%s]]||%s||~~~~~\n|-' % (cases, i, ', '.join(patt.findall(i)))
+        del backlog[i]
     ##--- check if anyone who did not apply for renaming
     if(cases != ''):
         title = u"উইকিপিডিয়া:নীতিমালাবহির্ভূত ব্যবহারকারী নাম/%s %s" % (en2bn(now.year), month[now.month -1])
@@ -261,7 +269,7 @@ def patrolRecentChange():
         ("grcnamespace", 6),
         ("grcprop", "title|timestamp|ids"),
         ('grcstart',last_access),
-        ("grclimit","max"),
+        ("grclimit",250),
         ('grcdir','newer')
     ]
     ###
@@ -276,9 +284,15 @@ def patrolRecentChange():
             else:
                 data2 = []
             if('grccontinue' in batch['query-continue']['recentchanges']):
-                data3.insert(12,('grccontinue', batch['query-continue']['recentchanges']['grccontinue']))
+                if len(data3) < 13:
+                    data3.insert(12,('grccontinue', batch['query-continue']['recentchanges']['grccontinue']))
+                else:
+                    data3[12] = ('grccontinue', batch['query-continue']['recentchanges']['grccontinue'])
             elif('query-noncontinue' in batch): # accessing recentchanges first
-                data3.insert(12,('grccontinue', batch['query-noncontinue']['recentchanges']['grccontinue']))
+                if len(data3) < 13:
+                    data3.insert(12,('grccontinue', batch['query-noncontinue']['recentchanges']['grccontinue']))
+                else:
+                    data3[12] = ('grccontinue', batch['query-noncontinue']['recentchanges']['grccontinue'])
                 del batch['query']['pages']
             else:
                 data3 = []
@@ -319,7 +333,6 @@ def patrolRecentChange():
             fp = pb.Page(bn,i['title'])
             fp.text = u'{{মুক্ত নয় হ্রাস করুন|type=%s|bot=নকীব বট}}\n' % (p1) + fp.text
             fp.save(u'অধিক রেজ্যুলেশনের অ-মুক্ত চিত্র হ্রাসকরণের জন্য ট্যাগ করা হয়েছে')
-            #print(fp)
             #----Notify the user ----#
             """
             user = pb.Page(bn,'User talk:' +info['user'])
@@ -337,8 +350,7 @@ def patrolRecentChange():
             #---Notify the user ---#
             user = pb.Page(bn, 'User talk:'+i)
             user.text+= "\n==ব্যবহারকারী নাম সম্পর্কে==\n{{subst:uw-username|এতে '''%s''' পদ(সমূহ) বিদ্যমান।}}\n~~~~" % (', '.join(k))
-            #print(user)
-            user.save(u'ব্যবহারকারী নাম নীতিমালা পরিপন্থী হওয়ায় বিজ্ঞপ্তি প্রদান')
+            #user.save(u'ব্যবহারকারী নাম নীতিমালা পরিপন্থী হওয়ায় বিজ্ঞপ্তি প্রদান')
             backlog[i] = now_st
     settings['detectUser']['backlog'] = backlog
 def check(match):
@@ -349,10 +361,9 @@ if(config['editWar']["status"]):
     detect_edit_war()
 if(config['detectUser']['status'] or config['reduceImage']["tag"]["status"]):
     patrolRecentChange()
+    settings["editWar"]["last_access"] = now.strftime(ISO)
+s = json.dumps(settings, indent = 4,ensure_ascii=False)
 fp = open("setting.json","w")
-settings["editWar"]["last_access"] = now.strftime(ISO)
-fp.write(
-    json.dumps(settings, indent = 4,ensure_ascii=False)
-)
+fp.write(s)
 fp.close()
 print(now)
