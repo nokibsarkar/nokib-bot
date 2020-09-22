@@ -260,6 +260,39 @@ def manageCategory(site,conf):
             if(editcount >= conf["test"]["count"]):
                 return
             time.sleep(lag)
+def removeUserWarnings():
+    data = {
+	    "action": "query",
+     	"format": "json",
+	    "list": "categorymembers",
+	    "utf8": 1,
+	    "cmtitle": u"বিষয়শ্রেণী:সম্ভাব্য নীতি সমস্যা সহ উইকিপিডিয়া ব্যবহারকারীর নাম",
+	    "cmprop": "title",
+	    "cmnamespace": "3",
+	    "cmtype": "page",
+	    "cmlimit": "max",
+	    "cmsort": "timestamp",
+	    "cmdir": "newer"
+    }
+    res = r(site=bn,parameters=data).submit()['query']['categorymembers']
+    if len(res) is 0:
+        return
+    data = {
+	    "action": "query",
+	    "format": "json",
+	    "list": "users",
+	    "utf8": 1,
+	    "usprop": "blockinfo",
+	    "usattachedwiki": "",
+	    "ususers": ['user:%s' % i['title'][17:] for i in res]
+    }
+    res = r(site=bn,parameters=data).submit()['query']['users']
+    cat = pb.Category(bn,u"বিষয়শ্রেণী:সম্ভাব্য নীতি সমস্যা সহ উইকিপিডিয়া ব্যবহারকারীর নাম")
+    for i in res:
+        if 'blockid' not in i:
+            #yet not blocked
+            continue
+         pb.Page(bn,'user talk:%s' % i['name']).change_category(cat, None, summary = " %s কর্তৃক ইতিমধ্যেই বাধাপ্রাপ্ত হওয়ায় [[বিষয়শ্রেণী:সম্ভাব্য নীতি সমস্যা সহ উইকিপিডিয়া ব্যবহারকারীর নাম|]] অপসারণ" % i['blockedby'])
 if(config["patrolRecentchanges"]["status"]):
     patrolRecentChange()
 sites = settings["categoryRedirect"]["languages"]
