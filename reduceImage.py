@@ -109,6 +109,7 @@ def reduceFUR():
     #---Login
     bn.login()
     #----
+    parser = etree.XMLParser(encoding='utf-16')
     summary = config['reduceImage']['uploadSummary']
     files = pb.Category(bn,u"বিষয়শ্রেণী:" + config['reduceImage']['tracker']).members()
     for i in files:
@@ -119,7 +120,7 @@ def reduceFUR():
         t = False
         if(title[-4:].lower() == '.svg'):
             with open (title,"r") as fp:
-                tree = etree.parse(fp)
+                tree = etree.parse(fp,parser)
             dim = i.latest_file_info
             dim = get_dimension((dim.width,dim.height), config['reduceImage']['tag']['minDeltaRate'], config['reduceImage']['tag']['resolution'])
             try:
