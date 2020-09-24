@@ -4,7 +4,10 @@ if(config['archiveTalk']['status']):
     archive.archive()
 if(config["reduceImage"]['status']):
     import reduceImage
-    reduceImage.reduceFUR()
+    try:
+        reduceImage.reduceFUR()
+    except Exception as e:
+        print("%s" % e)
 if(config["goodArticle"]["status"]):
     import ga
     ga.manageGATalk()
