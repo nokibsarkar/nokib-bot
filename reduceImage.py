@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 from setup import *
 import os
 from PIL import Image as im
