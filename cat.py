@@ -292,7 +292,7 @@ def removeUserWarnings():
         if 'blockid' not in i:
             #yet not blocked
             continue
-         pb.Page(bn,'user talk:%s' % i['name']).change_category(cat, None, summary = " %s কর্তৃক ইতিমধ্যেই বাধাপ্রাপ্ত হওয়ায় [[বিষয়শ্রেণী:সম্ভাব্য নীতি সমস্যা সহ উইকিপিডিয়া ব্যবহারকারীর নাম|]] অপসারণ" % i['blockedby'])
+        pb.Page(bn,'user talk:%s' % i['name']).change_category(cat, None, summary = " %s কর্তৃক ইতিমধ্যেই বাধাপ্রাপ্ত হওয়ায় [[বিষয়শ্রেণী:সম্ভাব্য নীতি সমস্যা সহ উইকিপিডিয়া ব্যবহারকারীর নাম|]] অপসারণ" % i['blockedby'])
 if(config["patrolRecentchanges"]["status"]):
     patrolRecentChange()
 sites = settings["categoryRedirect"]["languages"]
