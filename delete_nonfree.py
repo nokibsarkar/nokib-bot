@@ -3,6 +3,7 @@ import re
 from datetime import datetime as dt
 now = dt.utcnow()
 bn = pb.Site('bn','wikipedia')
+bn.login()
 r = pb.data.api.Request
 ISO = "%Y-%m-%dT%H:%M:%SZ"
 furd_template = re.compile('\{\{ *মুক্ত নয় হ্রাসকৃত[^\}]*\}\}\s*')
