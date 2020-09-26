@@ -79,4 +79,3 @@ def main():
         #l1 and i.save(u'পূর্বের সংস্করণগুলো মুছে ফেলায় {{মুক্ত নয় হ্রাসকৃত}} টেমপ্লেট অপসারণ')
     delete(ids)
     print("Deleted %d revisions" % len(ids))
-main()
