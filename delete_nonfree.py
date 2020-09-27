@@ -9,7 +9,7 @@ ISO = "%Y-%m-%dT%H:%M:%SZ"
 furd_template = re.compile('\{\{ *মুক্ত নয় হ্রাসকৃত[^\}]*\}\}\s*')
 csrf = bn.get_tokens(['csrf'])['csrf']
 reason = u'বট কর্তৃক অ-মুক্ত চিত্রের পূর্ণ সংস্করণসমূহ সম্ভাব্য অ-ন্যায্য ব্যবহার বিবেচনা মুছে ফেলা হয়েছে'
-limit = 5#00
+limit = 5 #float('inf') #---- How many revisions to delete in total
 def fetch_revs(pageid):
     pageid = str(pageid)
     data = {
@@ -48,7 +48,7 @@ def main():
     ids = []
     l = 0
     for i in cat:
-        l1 = 0
+        changed = False
         if i.title()[:-4].lower() is '.svg':
             # skip the svg files
             continue
@@ -63,19 +63,19 @@ def main():
             # The latest upload is not expired of 7 days
             continue
         revs = revs[1:]
-        if l is 5:
+        if l is limit:
+            # reached limit
             break
         for rev in revs:
             #mark for deletion
             ids.append(rev['revid'])
             l += 1
-            l1 += 1
-            if l == limit:
+            changed = True
+            if l == 500:
                 if(delete(ids)):
                     print(" Deleted All the revisions")
                     ids = []
                     l = 0
-                    #break
-        #l1 and i.save(u'পূর্বের সংস্করণগুলো মুছে ফেলায় {{মুক্ত নয় হ্রাসকৃত}} টেমপ্লেট অপসারণ')
+        #changed and i.save(u'পূর্বের সংস্করণগুলো মুছে ফেলায় {{মুক্ত নয় হ্রাসকৃত}} টেমপ্লেট অপসারণ')
     delete(ids)
     print("Deleted %d revisions" % len(ids))
