@@ -19,7 +19,7 @@ def fetch_revs(pageid):
     	'prop':'revisions',
     	'rvslots':'main',
     	'rvlimit':'max',
-    	'rvprop':'user|timestamp|ids',
+    	'rvprop':'user|ids',
     	'pageids':pageid
     	}
     res = r(bn,parameters=data).submit()['query']['pages'][pageid]
@@ -30,11 +30,11 @@ def delete(name,ids):
 	    "action": "revisiondelete",
 	    "format": "json",
 	    "type": "oldimage",
-     "target": name,
+      "target": name,
 	    "ids": ids,
 	    "hide": "content",
 	    "reason": reason,
-	    "tags": "কপিরাইট লঙ্ঘন",
+	    #"tags": "কপিরাইট লঙ্ঘন",
 	    "token": csrf
 }
     res = r(bn,parameters=data).submit()
