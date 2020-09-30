@@ -38,6 +38,7 @@ def delete(name,ids):
 	    "token": csrf
 }
     res = r(bn,parameters=data).submit()
+    print(res)
     if 'error' in res:
         if res['error']['code'] == 'badtoken':
             csrf = bn.get_tokens(['csrf'])['csrf']
