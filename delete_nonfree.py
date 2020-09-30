@@ -2,7 +2,7 @@ import pywikibot as pb
 import re
 from datetime import datetime as dt
 now = dt.utcnow()
-bn = pb.Site('bn','wikipedia')
+bn = pb.Site('test','wikipedia')
 bn.login()
 r = pb.data.api.Request
 ISO = "%Y-%m-%dT%H:%M:%SZ"
@@ -24,31 +24,30 @@ def fetch_revs(pageid):
     	}
     res = r(bn,parameters=data).submit()['query']['pages'][pageid]
     return res['revisions']
-def delete(ids):
+def delete(name,ids):
     global csrf
     data = {
-	      "action": "revisiondelete",
-	      "format": "json",
-	      "type": "oldimage",
-	      "ids": ids,
-	      "hide": "content",
-	      "reason": reason,
-	      "token": csrf
-    }
+	    "action": "revisiondelete",
+	    "format": "json",
+	    "type": "oldimage",
+     "target": name,
+	    "ids": ids,
+	    "hide": "content",
+	    "reason": reason,
+	    "tags": "কপিরাইট লঙ্ঘন",
+	    "token": csrf
+}
     res = r(bn,parameters=data).submit()
     if 'error' in res:
         if res['error']['code'] == 'badtoken':
             csrf = bn.get_tokens(['csrf'])['csrf']
-            return delete(ids)
+            return delete(name,ids)
         print("Error occurred: ",res)
         return False
     return True
 def main():
     cat = pb.Category(bn,'Category:মুক্ত নয় হ্রাসকৃত ফাইল').articles(namespaces=6)
-    ids = []
-    l = 0
     for i in cat:
-        changed = False
         if i.title()[:-4].lower() is '.svg':
             # skip the svg files
             continue
@@ -58,24 +57,21 @@ def main():
             # no template was defined
             continue
         revs = fetch_revs(i.pageid) # except the first one
-        timestamp = dt.strptime(revs[0]['timestamp'], ISO) #Parse the timestamp
-        if (now - timestamp).days < 7:
+        if (now - i.latest_file_info.timestamp).days < 7:
             # The latest upload is not expired of 7 days
             continue
         revs = revs[1:]
         if l is limit:
             # reached limit
             break
+        ids = []
         for rev in revs:
             #mark for deletion
             ids.append(rev['revid'])
-            l += 1
-            changed = True
-            if l == 500:
-                if(delete(ids)):
-                    print(" Deleted All the revisions")
-                    ids = []
-                    l = 0
-        #changed and i.save(u'পূর্বের সংস্করণগুলো মুছে ফেলায় {{মুক্ত নয় হ্রাসকৃত}} টেমপ্লেট অপসারণ')
-    delete(ids)
-    print("Deleted %d revisions" % len(ids))
+        if(len(ids)):
+            delete(
+               	i.title(),
+            	   ids
+            	) and i.save(
+            	   u'পূর্বের সংস্করণগুলো মুছে ফেলায় {{মুক্ত নয় হ্রাসকৃত}} টেমপ্লেট অপসারণ'
+            	)
