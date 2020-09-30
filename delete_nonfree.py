@@ -61,9 +61,6 @@ def main():
             # The latest upload is not expired of 7 days
             continue
         revs = revs[1:]
-        if l is limit:
-            # reached limit
-            break
         ids = []
         for rev in revs:
             #mark for deletion
