@@ -62,7 +62,7 @@ def main():
                 print("SVG found")
                 continue
             infos = i['imageinfo']
-            if((now - dt.strptime(infos[0]['timestamp'], ISO).days < 7):
+            if((now - dt.strptime(infos[0]['timestamp'], ISO)).days < 7):
                 	print("7 days did not pass")
                 	continue
             rev = i['revisions'][0]['slots']['main']
