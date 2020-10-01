@@ -6,6 +6,7 @@ bn = pb.Site('test','wikipedia')
 bn.login()
 r = pb.data.api.Request
 ISO = "%Y-%m-%dT%H:%M:%SZ"
+tracker = "Category:মুক্ত নয় হ্রাসকৃত"
 archiveID = re.compile("/archive/[^/]+/[^/]/(\d+)")
 furd_template = re.compile('\{\{ *মুক্ত নয় হ্রাসকৃত[^\}]*\}\}\s*')
 csrf = bn.get_tokens(['csrf'])['csrf']
