@@ -6,8 +6,8 @@ bn = pb.Site('test','wikipedia')
 bn.login()
 r = pb.data.api.Request
 ISO = "%Y-%m-%dT%H:%M:%SZ"
-tracker = "Category:মুক্ত নয় হ্রাসকৃত"
-archiveID = re.compile("/archive/[^/]+/[^/]/(\d+)")
+tracker = "Category:মুক্ত নয় হ্রাসকৃত ফাইল"
+archiveID = re.compile("\/archive\/[^\/]+\/[^\/]+\/(\d+)")
 furd_template = re.compile('\{\{ *মুক্ত নয় হ্রাসকৃত[^\}]*\}\}\s*')
 csrf = bn.get_tokens(['csrf'])['csrf']
 reason = u'বট কর্তৃক অ-মুক্ত চিত্রের পূর্ণ সংস্করণসমূহ সম্ভাব্য অ-ন্যায্য ব্যবহার বিবেচনা মুছে ফেলা হয়েছে'
@@ -48,7 +48,7 @@ def main():
 	    "gcmtype": "file",
 	    "rvprop":"content",
 	    "rvslots":"main",
-	    "gcmlimit":"max"
+	    "gcmlimit":10#"max"
     }
     c = True
     while(c):
@@ -58,6 +58,7 @@ def main():
             data['gcmcontinue'] = batch['query-continue']['categorymembers']['gcmcontinue']
         batch = batch['query']['pages']
         for i in batch:
+            i = batch[i]
             name = i['title']
             if name[4:].lower() == '.svg':
                 print("SVG found")
@@ -66,8 +67,8 @@ def main():
             if((now - dt.strptime(infos[0]['timestamp'], ISO)).days < 7):
                 	print("7 days did not pass")
                 	continue
-            rev = i['revisions'][0]['slots']['main']
-            rev, n = furd_template.subn(rev, '', 1)
+            rev = i['revisions'][0]['slots']['main']['*']
+            rev, n = furd_template.subn( '',rev, 1)
             if n is 0:
                 print("Skip as not template was found")
                 continue
@@ -84,4 +85,4 @@ def main():
             i = pb.FilePage(bn,name)
             i.text = rev
             i.save(summary)
-                
+main()
