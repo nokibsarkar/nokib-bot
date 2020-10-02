@@ -1,3 +1,4 @@
 @hourly /usr/bin/jsub -N cat -quiet pwb/bin/python3 cat.py
 @daily  /usr/bin/jstart -N daily -once -quiet pwb/bin/python3 daily.py
 */5 * * * * /usr/bin/jsub -N editWar -quiet pwb/bin/python3 editWar.py
+@weekly /usr/bin/jsub -N editcounter pwb/bin/python3 editcounter.py
