@@ -405,7 +405,7 @@ def manageNominee():
                 if(not(rex)):
                     R["status"] = ""
                 R["note"] = to_s(gan.group("note")).strip()
-                subst+= "\n | status\t= " +R["status"]+"\n | note\t= "+R["note"]+"\n}}"
+                subst+= "\n | status\t= " +R["status"]+"\n | note\t="+R["note"]+"\n}}"
                 talk.text = gan_template.sub(subst,talk.text)
                 if(rex and not(rev_template.search(talk.text)) and config["addRevPage"]):
                     talk.text+="\n{{"+revPage.title()+"}}"  
