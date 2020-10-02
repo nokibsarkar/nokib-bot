@@ -14,4 +14,5 @@ Specific task for the bot named <code>নকীব বট</code> in Bengali Wiki
 In order to run this file,
 * Check you have install <code>Pywikibot</code> library properly and corresponding <code>user-config.py</code> and <code>user-password.py</code> configuration files. 
 * Save the two files <code><del>setup.py</del><ins>environment.py</ins></code> and <code>delete_nonfree.py</code> in your working directory.
+* Open command panel and give the command <code style="background:black;color:white">python3 delete_nonfree.py</code>
 
