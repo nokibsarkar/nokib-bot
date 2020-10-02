@@ -34,7 +34,7 @@ def delete(name,ids):
             return delete(name,ids)
         print("Error occurred: ",res)
         return False
-     return True
+    return True
 def main():
     data = {
 	    "action": "query",
