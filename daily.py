@@ -1,4 +1,5 @@
-from setup import config
+from environment import *
+# previously from setup import config
 if(config['archiveTalk']['status']):
     import archive
     archive.archive()

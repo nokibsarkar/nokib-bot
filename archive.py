@@ -1,4 +1,5 @@
-from setup import *
+from environment import *
+# previously from setup import *
 #### Declaring Constants of archiving ###
 Archive = {}
 defaults = [ #default setting
@@ -99,7 +100,7 @@ def is_old(txt):
         txt = to_en(k.group(1).replace(month,month_e)) # localise to english
         k = dt.datetime.strptime(txt,DATE) #parse the date
         return (now - k).days >= Archive["config"]["max-day"]
-    except: # an error occurred so stay safe and skip
+    except: # an error occured so stay safe and skip
         return False
 def to_en(txt):
     s = ""

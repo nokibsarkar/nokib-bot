@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*- 
-from setup import *
+from environment import *
+# previously from setup import *
 import os
 from PIL import Image as im
 from xml.etree import ElementTree as etree

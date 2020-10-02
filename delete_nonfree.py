@@ -1,11 +1,5 @@
-import pywikibot as pb
-import re
-from datetime import datetime as dt
-now = dt.utcnow()
-bn = pb.Site('test','wikipedia')
-bn.login()
-r = pb.data.api.Request
-ISO = "%Y-%m-%dT%H:%M:%SZ"
+from environment import *
+# previously 
 tracker = "Category:মুক্ত নয় হ্রাসকৃত ফাইল"
 archiveID = re.compile("\/archive\/[^\/]+\/[^\/]+\/(\d+)")
 furd_template = re.compile('\{\{ *মুক্ত নয় হ্রাসকৃত[^\}]*\}\}\s*')
@@ -62,16 +56,16 @@ def main():
             i = batch[i]
             name = i['title']
             if name[-4:].lower() == '.svg':
-                #print("SVG found")
+                print("SVG found")
                 continue
             infos = i['imageinfo']
             if((now - dt.strptime(infos[0]['timestamp'], ISO)).days < 7):
-                	#print("7 days did not pass")
+                	print("7 days did not pass")
                 	continue
             rev = i['revisions'][0]['slots']['main']['*']
             rev, n = furd_template.subn( '', rev, 1)
             if n is 0:
-                #print("Skip as not template was found")
+                print("Skip as not template was found")
                 continue
             ids = []
             for j in infos[1:]:

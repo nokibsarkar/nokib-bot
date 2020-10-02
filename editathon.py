@@ -1,4 +1,5 @@
-from setup import *
+from environment import *
+# previously from setup import *
 bn.login()
 config = config['auditEditathon']
 content = u"""{{ব্যবহারকারী:নকীব বট/সতর্কবার্তা}}
