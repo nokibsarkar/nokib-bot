@@ -10,7 +10,7 @@ tracker = "Category:মুক্ত নয় হ্রাসকৃত ফাইল
 archiveID = re.compile("\/archive\/[^\/]+\/[^\/]+\/(\d+)")
 furd_template = re.compile('\{\{ *মুক্ত নয় হ্রাসকৃত[^\}]*\}\}\s*')
 csrf = bn.get_tokens(['csrf'])['csrf']
-reason = u'বট কর্তৃক অ-মুক্ত চিত্রের পূর্ণ সংস্করণসমূহ সম্ভাব্য অ-ন্যায্য ব্যবহার বিবেচনা মুছে ফেলা হয়েছে'
+reason = u'[[উইকিপিডিয়া:চ৫|চ৫]] অনুসারে বট কর্তৃক অ-মুক্ত চিত্রের পূর্ববর্তী সংস্করণ মুছে ফেলা হয়েছে'
 summary = u'অ-মুক্ত চিত্রের পূর্ববর্তী সংস্করণসমূহ মুছে ফেলায় {{মুক্ত নয় হ্রাসকৃত}} অপসারণ'
 limit = 5 #float('inf') #---- How many revisions to delete in total
 def delete(name,ids):
