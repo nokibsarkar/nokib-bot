@@ -4,7 +4,7 @@ tracker = "Category:মুক্ত নয় হ্রাসকৃত ফাইল
 archiveID = re.compile("\/archive\/[^\/]+\/[^\/]+\/(\d+)")
 furd_template = re.compile('\{\{ *মুক্ত নয় হ্রাসকৃত[^\}]*\}\}\s*')
 csrf = bn.get_tokens(['csrf'])['csrf']
-reason = u'বট কর্তৃক অ-মুক্ত চিত্রের পূর্ণ সংস্করণসমূহ সম্ভাব্য অ-ন্যায্য ব্যবহার বিবেচনা মুছে ফেলা হয়েছে'
+reason = u'[[উইকিপিডিয়া:চ৫|চ৫]] অনুসারে বট কর্তৃক অ-মুক্ত চিত্রের পূর্ববর্তী সংস্করণসমূহ মুছে ফেলা হয়েছে'
 summary = u'অ-মুক্ত চিত্রের পূর্ববর্তী সংস্করণসমূহ মুছে ফেলায় {{মুক্ত নয় হ্রাসকৃত}} অপসারণ'
 limit = 5 #float('inf') #---- How many revisions to delete in total
 def delete(name,ids):
@@ -21,7 +21,6 @@ def delete(name,ids):
 	    "token": csrf
 }
     res = r(bn,parameters=data).submit()
-    print(res)
     if 'error' in res:
         if res['error']['code'] == 'badtoken':
             csrf = bn.get_tokens(['csrf'])['csrf']
@@ -33,17 +32,15 @@ def main():
     data = {
 	    "action": "query",
 	    "format": "json",
-	    "prop": "imageinfo|revisions",
+	    "prop": "imageinfo",
 	    "generator": "categorymembers",
 	    "utf8": 1,
-	    "iiprop": "user|url|timestamp",
+	    "iiprop": "url|timestamp",
 	    "iilimit": "max",
 	    "iilocalonly": 1,
 	    "gcmtitle": tracker,
 	    "gcmtype": "file",
-	    "rvprop":"content",
-	    "rvslots":"main",
-	    "gcmlimit":"max"
+	    "gcmlimit": "max"
     }
     c = True
     while(c):
@@ -59,14 +56,12 @@ def main():
                 print("SVG found")
                 continue
             infos = i['imageinfo']
-            if((now - dt.strptime(infos[0]['timestamp'], ISO)).days < 7):
+            if((now - dt.datetime.strptime(infos[0]['timestamp'], ISO)).days < 7):
                 	print("7 days did not pass")
                 	continue
-            rev = i['revisions'][0]['slots']['main']['*']
-            rev, n = furd_template.subn( '', rev, 1)
-            if n is 0:
-                print("Skip as not template was found")
-                continue
+            #if 'templates' not in i:
+                #print("Skip as not template was found")
+                #continue
             ids = []
             for j in infos[1:]:
                 if 'url' in j:
@@ -74,12 +69,12 @@ def main():
                     if(k):
                         ids.append(k.group(1))
             if len(ids) is 0:
-                # No version was deleted
+                print("No version was deletable")
                 continue
             try:
                 delete(name, ids)
                 i = pb.FilePage(bn,name)
-                i.text = rev
+                page.text = furd_template.sub( '', page.text, 1)
                 i.save(summary)
             except Exception as e:
                 print("Something occurred:%s" % e)
