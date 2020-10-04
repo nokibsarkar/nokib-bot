@@ -350,7 +350,7 @@ def patrolRecentChange():
             #---Notify the user ---#
             user = pb.Page(bn, 'User talk:'+i)
             user.text+= "\n==ব্যবহারকারী নাম সম্পর্কে==\n{{subst:uw-username|এতে '''%s''' পদ(সমূহ) বিদ্যমান।}}\n~~~~" % (', '.join(k))
-            user.save(u'ব্যবহারকারী নাম নীতিমালা পরিপন্থী হওয়ায় বিজ্ঞপ্তি প্রদান')
+            user.save(u'ব্যবহারকারী নাম নীতিমালা পরিপন্থী হওয়ায় বিজ্ঞপ্তি প্রদান',minor=False)
             backlog[i] = now_st
     settings['detectUser']['backlog'] = backlog
 def check(match):
