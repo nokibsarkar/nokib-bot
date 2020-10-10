@@ -120,7 +120,7 @@ def getCat(title):
     R={
     	"date":"",
      "cat":"",
-     "page":"১",
+     "page": "১",
      "catpage": pb.Page(bn,gan_pref+'/'+config['default'])
     }
     R['removed'] = R['catpage'].text
@@ -132,7 +132,7 @@ def getCat(title):
             try:
                 R["cat"] = cat
                 R["catpage"] = t
-                R["page"] = k.group("page")#bangla
+                R["page"] = k.group("page") or "১"#bangla
                 R["user"] = k.group("user")
                 ext = k.group("ext")
                 k = date.search(ext)
@@ -180,7 +180,7 @@ def manageGATalk():
         else:
             R["topic"] = ""
             R["no"] = "১"
-        R["link"] = "/ভালো নিবন্ধ"+R["no"]
+        R["link"] = "/ভালো নিবন্ধ" + R["no"]
         #if(mx == "1"):
         #-----beta ---#
         if(first):
