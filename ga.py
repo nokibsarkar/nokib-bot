@@ -7,7 +7,7 @@ entry_pref = "#\s*\{\{\s*(?:[Gg]ANentry|প্রভানিভুক্তি)
 entry_suf = "(?:\|\s*(?:2\s*=\s*)?(?P<page>[^\}\|]*)(?:\|(?P<note>[^\}]*))?)?\}\}[^[]*\[\[\s*(?:[Uu]ser|ব্যবহারকারী)\s*:\s*(?P<user>[^\]\|]+)(?P<ext>(?:(?!\n#\s*\{\{|<!--).)*)"
 date = re.compile("(?P<date>[" + no + "]{1,2} " + months + ",? [" + no + "]{4}|" + months + " [" + no + "]{2},? [" + no + "]{4})")
 entry = re.compile(entry_pref + "(?P<name>[^\|\}]+)" + entry_suf)
-res_patt = re.compile("\{\{\s*(?P<status>([Ff]ailed|[Dd]elisted)?)[gG]A\s*[^\}]*\}\}")
+res_patt = re.compile("\s*\{\{\s*(?P<status>([Ff]ailed|[Dd]elisted)?)[gG]A\s*[^\}]*\}\}\s*")
 ga_tag = re.compile("\{\{\s*(ভালো নিবন্ধ|[gG]ood article)\s*\}\}")
 Users = re.compile("(?:\{\{ *(?:[pP]ing|উত্তর|[rR]e(?:ply(?: to)?)?) *\||\[\[ *(?:[uU]ser|ব্যবহারকারী) *:) *([^\|\}\]]+)")
 level = re.compile("<\$নববি(\S)\$>")
@@ -260,7 +260,7 @@ def manageGATalk():
         else:
             subst = "{{নিবন্ধ ইতিহাস" + subst 
             subst+= "\n| currentstatus\t= "+R["status"]
-            subst+= "\n| topic\t= "+R["topic"]+"\n}}\n"
+            subst+= "\n| topic\t= " +R["topic"]+"\n}}\n"
             s = TALK.subn("{{আলাপ পাতা}}\n"+subst,talk.text)
             if(s[1]):
                 talk.text = s[0]
