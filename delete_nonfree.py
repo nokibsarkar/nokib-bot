@@ -1,8 +1,9 @@
 from environment import *
+bn = pb.Site("test","wikipedia")
 # previously 
-tracker = "Category:মুক্ত নয় হ্রাসকৃত ফাইল"
+tracker = "Category:অ-মুক্ত হ্রাসকৃত ফাইল"
 archiveID = re.compile("\/archive\/[^\/]+\/[^\/]+\/(\d+)")
-furd_template = re.compile('\{\{ *মুক্ত নয় হ্রাসকৃত[^\}]*\}\}\s*')
+furd_template = re.compile('\s*\{\{ *মুক্ত নয় হ্রাসকৃত[^\}]*\}\}\s*')
 csrf = bn.get_tokens(['csrf'])['csrf']
 reason = u'[[উইকিপিডিয়া:চ৫|চ৫]] অনুসারে অ-মুক্ত চিত্রের পূর্ববর্তী সংস্করণ মুছে ফেলা হয়েছে'
 summary = u'অ-মুক্ত চিত্রের পূর্ববর্তী সংস্করণ মুছে ফেলায় {{মুক্ত নয় হ্রাসকৃত}} অপসারণ'
@@ -68,13 +69,13 @@ def main():
                     k = archiveID.search(j['url'])
                     if(k):
                         ids.append(k.group(1))
-            if len(ids) is 0:
-                print("No version was deletable")
+            if len(ids) == 0:
+                print("No version was deletable for %s" % name)
                 continue
             try:
                 delete(name, ids)
                 i = pb.FilePage(bn,name)
-                page.text = furd_template.sub( '', page.text, 1)
+                i.text = furd_template.sub( '', i.text, 1)
                 i.save(summary)
             except Exception as e:
                 print("Something occurred:%s" % e)
