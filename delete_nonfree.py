@@ -1,7 +1,7 @@
 from environment import *
 # previously 
 bn.login()
-tracker = "Category:অ-মুক্ত হ্রাসকৃত ফাইল"
+tracker = "Category:হ্রাসকৃত অ-মুক্ত ফাইল"
 archiveID = re.compile("\/archive\/[^\/]+\/[^\/]+\/(\d+)")
 furd_template = re.compile('\s*\{\{ *মুক্ত নয় হ্রাসকৃত[^\}]*\}\}\s*')
 try:
