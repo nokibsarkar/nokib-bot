@@ -1,5 +1,4 @@
 from environment import *
-bn = pb.Site("test","wikipedia")
 # previously 
 bn.login()
 tracker = "Category:অ-মুক্ত হ্রাসকৃত ফাইল"
