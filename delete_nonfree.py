@@ -1,10 +1,15 @@
 from environment import *
 bn = pb.Site("test","wikipedia")
 # previously 
+bn.login()
 tracker = "Category:অ-মুক্ত হ্রাসকৃত ফাইল"
 archiveID = re.compile("\/archive\/[^\/]+\/[^\/]+\/(\d+)")
 furd_template = re.compile('\s*\{\{ *মুক্ত নয় হ্রাসকৃত[^\}]*\}\}\s*')
-csrf = bn.get_tokens(['csrf'])['csrf']
+try:
+    csrf = bn.get_tokens(['csrf'])['csrf']
+except KeyError as e:
+    print("CSRF Token could not be fetched. May be you have not logged in")
+    exit()
 reason = u'[[উইকিপিডিয়া:চ৫|চ৫]] অনুসারে অ-মুক্ত চিত্রের পূর্ববর্তী সংস্করণ মুছে ফেলা হয়েছে'
 summary = u'অ-মুক্ত চিত্রের পূর্ববর্তী সংস্করণ মুছে ফেলায় {{মুক্ত নয় হ্রাসকৃত}} অপসারণ'
 limit = 5 #float('inf') #---- How many revisions to delete in total
