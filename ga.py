@@ -367,13 +367,13 @@ def manageNominee():
                            #notify nominator
                             nominator.text+="\n{{subst:user:নকীব বট/বিজ্ঞপ্তি/৪ম|"+main.title()+"|"+talk.title()+"|"+reviewer.title()[17:]+"}}"
                             try:
-                                nominator.save()
+                                nominator.save("চূড়ান্ত পর্যায়ের বার্তা প্রদান")
                             except:
                                 pass
                            #notify project
                             pj = pb.Page(bn,"উইকিপিডিয়া আলাপ:উইকিপ্রকল্প ভালো নিবন্ধ")
                             pj.text += "{{subst:user:নকীব বট/বিজ্ঞপ্তি/৪প্র|"+main.title()+"|"+reviwer.title()[17:]+ "|" + nominator.title()[17:]+"}}"
-                            pj.save("[["+ main.title()+ "]] নিবন্ধটি প্রায় দেড়মাসের বেশি সময় ধরে স্থগিতাবস্থা বজায় থাকায় মূল প্রকল্পে জানানো হয়েছে",quiet=True)
+                            pj.save("[["+ main.title()+ "]] নিবন্ধটি প্রায় দেড়মাসের বেশি সময় ধরে স্থগিতাবস্থা বজায় থাকায় মূল প্রকল্পে জানানো হয়েছে")
                            #update level
                             summary = "পর্যালোচক সম্ভবত ব্যস্ত; তাই মূল প্রকল্পে অবহিত করা হয়েছে। এই ব্যাপারে পর্যালোচক ও মনোনয়ককেও জানানো হয়েছে"
                             revPage.text = level.sub("<$নববি৪$>",revPage.text,count=1)
