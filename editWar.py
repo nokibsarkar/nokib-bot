@@ -7,7 +7,7 @@ bn = pb.Site("bn","wikipedia")
 r = pb.data.api.Request
 ISO = "%Y-%m-%dT%H:%M:%SZ"
 MIME = re.compile('image\/(.+)')
-non_free = re.compile('\{\{\s*(?:মুক্ত নয়|non-free) *(?!হ্রাস(?:কৃত| কর(?:ুন|বেন না))|(?:no )?reduced?)',re.I)
+non_free = re.compile('\{\{\s*(?:অ-মুক্ত|মুক্ত নয়|non-free) *(?!হ্রাস(?:কৃত| কর(?:ুন|বেন না))|(?:no )?reduced?)',re.I)
 tagged = re.compile('\{\{\s*(?:মুক্ত নয়|non-free) (?:হ্রাস(?:কৃত| কর(?:ুন|বেন না))|(?:no )?reduced?)', re.I)
 config =json.loads(pb.Page(bn,"user:নকীব বট/config.json").text)
 settings = None
@@ -333,7 +333,7 @@ def patrolRecentChange():
                 continue
             #--- Overly pixeled non-free image
             fp = pb.Page(bn,i['title'])
-            fp.text = u'{{মুক্ত নয় হ্রাস করুন|type=%s|bot=নকীব বট}}\n' % (p1) + fp.text
+            fp.text = u'{{অ-মুক্ত হ্রাস করুন|type=%s|bot=নকীব বট}}\n' % (p1) + fp.text
             fp.save(u'অধিক রেজ্যুলেশনের অ-মুক্ত চিত্র হ্রাসকরণের জন্য ট্যাগ করা হয়েছে')
             #----Notify the user ----#
             """
