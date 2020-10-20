@@ -10,7 +10,9 @@ MIME = re.compile('image\/(.+)')
 non_free = re.compile('\{\{\s*(?:মুক্ত নয়|non-free) *(?!হ্রাস(?:কৃত| কর(?:ুন|বেন না))|(?:no )?reduced?)',re.I)
 tagged = re.compile('\{\{\s*(?:মুক্ত নয়|non-free) (?:হ্রাস(?:কৃত| কর(?:ুন|বেন না))|(?:no )?reduced?)', re.I)
 config =json.loads(pb.Page(bn,"user:নকীব বট/config.json").text)
-settings = json.loads(open("setting.json","r").read())
+settings = None
+with open("realtime.json","r") as fp:
+    settings = json.loads(fp.read())
 patt = ''
 with open('illegal_username.txt','r') as fp:
     patt = fp.read()
