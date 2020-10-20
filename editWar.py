@@ -364,8 +364,7 @@ if(config['editWar']["status"]):
 if(config['detectUser']['status'] or config['reduceImage']["tag"]["status"]):
     patrolRecentChange()
     settings["editWar"]["last_access"] = now.strftime(ISO)
-s = json.dumps(settings, indent = 4,ensure_ascii=False)
-fp = open("setting.json","w")
-fp.write(s)
-fp.close()
+s = json.dumps(settings, indent =  4,ensure_ascii=False)
+with open("realtime.json","w") as fp:
+    fp.write(s)
 print(now)
