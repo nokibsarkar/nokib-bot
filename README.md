@@ -9,7 +9,7 @@ Specific task for the bot named <code>নকীব বট</code> in Bengali Wiki
 * <code>delete_nonfree.py</code>: The script for deleting non-reduced version of non-free images. The script has will skip the file if:
     * ... the file is a SVG (There are some issues regarding these)
     * ... the last upload date did not pass a week
-    * ... the file does not have the template {{মুক্ত নয় হ্রাসকৃত}} transcluded
+    * ... the file does not have the template {{মুক্ত নয় হ্রাসকৃত}}/{{অ-মুক্ত হ্রাসকৃত}} transcluded
 
 In order to run this file,
 * Check you have install <code>Pywikibot</code> library properly and corresponding <code>user-config.py</code> and <code>user-password.py</code> configuration files. 
