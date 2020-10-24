@@ -8,7 +8,7 @@ r = pb.data.api.Request
 ISO = "%Y-%m-%dT%H:%M:%SZ"
 MIME = re.compile('image\/(.+)')
 non_free = re.compile('\{\{\s*(?:অ-মুক্ত|মুক্ত নয়|non-free) *(?!হ্রাস(?:কৃত| কর(?:ুন|বেন না))|(?:no )?reduced?)',re.I)
-tagged = re.compile('\{\{\s*(?:মুক্ত নয়|non-free) (?:হ্রাস(?:কৃত| কর(?:ুন|বেন না))|(?:no )?reduced?)', re.I)
+tagged = re.compile('\{\{\s*(?:অ-মুক্ত|মুক্ত নয়|non-free) (?:হ্রাস(?:কৃত| কর(?:ুন|বেন না))|(?:no )?reduced?)', re.I)
 config =json.loads(pb.Page(bn,"user:নকীব বট/config.json").text)
 settings = None
 with open("realtime.json","r") as fp:
