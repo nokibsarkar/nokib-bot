@@ -120,7 +120,8 @@ def reduceFUR():
             continue
         t = False
         if(title[-4:].lower() == '.svg'):
-            with open (title,"r") as fp:
+            continue # nothing to do with these
+            """with open (title,"r") as fp:
                 tree = etree.parse(fp,parser)
             dim = i.latest_file_info
             dim = get_dimension((dim.width,dim.height), config['reduceImage']['tag']['minDeltaRate'], config['reduceImage']['tag']['resolution'])
@@ -130,7 +131,7 @@ def reduceFUR():
                 t = True
             except Exception as e:
                  print("%s is Already reduced" % title)
-                 pass
+                 pass"""
         else:
             t = thumb(title)
         i.text = temp.sub(u"{{subst:furd}}", i.text,1)
