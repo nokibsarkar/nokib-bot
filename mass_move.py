@@ -5,5 +5,6 @@ cats = pb.Category(bn,'বিষয়শ্রেণী:৭ দিন পূর
 subst = re.compile('\s*\{\{ *মুক্ত নয় হ্রাসকৃত[^\}]+\}\}\s*')
 def main():
     for i in cats:
-        i.text = subst.sub('',i.text)
+        print(i)
+        i.text = subst.sub('', i.text, 1)
         i.save(summary)
