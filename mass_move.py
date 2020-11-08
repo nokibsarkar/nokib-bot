@@ -8,3 +8,4 @@ def main():
         print(i)
         i.text = subst.sub('', i.text, 1)
         i.save(summary)
+main()
