@@ -3,6 +3,7 @@ from environment import *
 if(config['archiveTalk']['status']):
     import archive
     archive.archive()
+import collect_sample
 if(config["reduceImage"]['status']):
     import reduceImage
     try:
