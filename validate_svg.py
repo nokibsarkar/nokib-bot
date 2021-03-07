@@ -14,21 +14,23 @@ def set_status(m):
         return '\n{{%sবৈধ এসভিজি}}' % ("" if valid else 'অ')
     change = False  
     return m.group(1)
-def validate(start='!'):
-    global valid, change
-    images = bn.allimages(start=start)
-    for i in images:
-        print("Checking:",i.title())
-        if i.title()[-4:].lower() is not '.svg':
-            continue
-        #check with api
-        valid = len(sess.get(
-    	    validator,
-    	    params={'doc':i.get_file_url()}
-    	    ).json()['messages'])
-        valid = valid is 0
-        change = True
-        i.text = tag.sub(set_status,i.text,1)
-        if change:
-            i.save("এসভিজির উৎসের বৈধতা যাচাই করা হয়েছে")
-        break
+def mass_validate(start='!'):
+	images = bn.allimages(start=start)
+	for i in images:
+		validate(i)
+   break
+def validate(i):
+	global valid, change
+    print("Checking:",i.title())
+    if i.title()[-4:].lower() is not '.svg':
+        continue
+    #check with api
+    valid = len(sess.get(
+    	validator,
+    	params={'doc':i.get_file_url()}
+   	).json()['messages'])
+    valid = valid is 0
+    change = True
+    i.text = tag.sub(set_status, i.text, 1)
+    if change:
+        i.save("এসভিজির উৎসের বৈধতা যাচাই করা হয়েছে")
